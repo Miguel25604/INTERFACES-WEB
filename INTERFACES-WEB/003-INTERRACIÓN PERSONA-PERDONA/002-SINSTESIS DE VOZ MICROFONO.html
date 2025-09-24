@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+        <button onclick="startRecognition()">START</button>
+        <p id="salida"></p>
+
+        <script>
+            function startRecognition() {
+                //Variable atrapa o bien la capacidad de reconocimiento de voz del navegador
+                const reconocimiento = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                console.log(reconocimiento);
+
+                recognition.lang = 'es-ES';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.start();
+
+                recognition.onresult = function(event) {
+                    const transcript = event
+
+        </script>
+
+
+    
+    </body>
+</html>

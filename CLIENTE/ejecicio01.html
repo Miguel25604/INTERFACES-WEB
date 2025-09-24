@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVAN MARICA</title>
+   
+    </head>
+        <body>
+            <h1>HOLA MUNDO</h1>
+            <p>ESTE ES MI PRIMER EJERCICIO</p>
+            <script>
+
+                console.log("Este es un mensaje para JavaScript")
+                console.warn("Este es un mensaje de advertencia")
+                console.error("Este es un mensaje de error")
+                console.log(4-2);
+                console.log(4*2);
+                console.log(4/2);
+                console.log(4+2);
+                console.log(4%2);
+                
+                
+
+                console.log(4<3);  //4 menor que 3
+                console.log(4>3);   //4 mayor que 3
+                console.log(4<=3);  //4 menor o igual que 3
+                console.log(4>=3); //4 mayor o igual que 3
+                console.log(4==2);  //4 igual que 3
+                console.log(4!=3);  //4 diferente que 3
+                console.log(4===3); //4 estrictamente igual que 3
+                console.log(4==="3"); //4 estrictamente igual que 3 (tipo y valor)
+
+                console.log(4 == 4 && 3 == 3 && 2 == 2);
+                console.log(4 == 4 && 3 == 3 && 2 == 1);
+                
+
+                console.log(4 == 3 || 3 == 2 || 2 == 1);
+
+                /* var edad = 20;
+                console.log("Mi edad es:",edad);
+                edad = 25;
+                console.log("Mi edad actualizada es:",edad);
+                */
+
+                /*
+                let altura = 1.75;
+                console.log("Mi altura es:",altura);
+
+                const edad1 =46;
+                console.log("Mi edad es:",edad1);
+                edad1 = 50;
+                console.log("Mi edad actualizada es:",edad1);
+                
+                //edad1 = 50; //No se puede reasignar una constante
+                */
+                
+                /*
+                let pene = 50;
+                console.log("Mi edad es:",pene);
+                pene += 5;
+                console.log("Mi edad actualizada es:",pene);
+                */
+                
+                /*
+                for(let dia = 1; dia<=31; dia++){
+                    console.log("Hoy es el dia:",dia,"de este mes");
+                }
+                */
+
+                /*
+                for(let dia =1; dia<=31; dia++){
+                    document.write("Hoy es el dia: ",dia," de este mes<br>"); //SE MUESTRA EN LA PANTALLA
+                }
+                */
+
+                /*
+                for(let dia =1; dia<=31; dia++){
+                    document.write("<div class='dia'>Hoy es el dia: ",dia,"</div>"); //SE MUESTRA EN LA PANTALLA
+                }
+                */
+
+                /*
+                let dia = 1;
+                while(dia < 31){
+                    console.log("Hoy es el dia:",dia,"de este mes");
+                    dia++;
+                }
+                */
+
+                /*
+               let dia = 40;
+               do{
+                    console.log("Hoy es el dia",dia,"del mes actual");
+                }while(dia < 31);
+                */
+                
+                /*
+                 let edad = 46;
+            if(edad < 30){
+                console.log("Eres joven");
+            }else{
+                console.log("Ya no eres joven");
+            }
+            */
+            
+            /*
+                let agenda =[]; //Array 
+                agenda[0] = "Juan";
+                agenda[1] = "Pedro";
+                agenda[2] = "Maria";
+                console.table(agenda);
+                console.log(agenda[1]); //Pedro
+            */
+            
+            /*
+            let agenda = [];
+            agenda.push("Juan");
+            agenda.push("Pedro");
+            agenda.push("IVAN MARICA");
+            console.table(agenda);
+            console.log(agenda[1]); //Pedro
+            */
+           
+            /*
+            let agenda =[];
+           agenda.push("Juan");
+           agenda.push("Pedro");
+           agenda.push("Maria");
+           console.table(agenda);
+           agenda.pop(); //Elimina el ultimo elemento
+           console.table(agenda);
+           */
+
+           let agenda =[];
+            agenda.push("Juan");
+            agenda.push("Pedro");
+            agenda.push("Maria");
+            console.table(agenda);
+            agenda.pop(); //Elimina el ultimo elemento
+            console.table(agenda);
+            agenda.splice(1,2); //Elimina el primer elemento
+            console.table(agenda);
+           
+
+            </script>
+        </body>
+</html>

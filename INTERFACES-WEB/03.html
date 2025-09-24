@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        <table>
+           <tr>
+                <td>Nombre</td>
+                <td id="Nombre"></td>
+            </tr>
+
+            <tr>
+                <td>Apellidos</td>
+                <td id="Apellidos"></td>
+            </tr>
+
+            <tr>
+                <td>Email</td>
+                <td id="Email"></td>
+            </tr>
+            
+        </table>
+    </main>
+    <script>
+        fetch("cliente.json")           // VES Y BUSCA UN ARCHIVO
+        .then(function(response){        // Y CUNETO LO ENCUENTRES
+            return response.json();          //INTERPRETALO COMO JSON
+        })
+
+
+        .then(function(datos){      // Y ENTONCES AHORA
+            console.log(datos)      // ENSEÑAME LOS DATOS EN LA CONSOLA         
+
+            document.querySelector('#Nombre').textContent =datos.Nombre     //BUSCA EL ELEMENTO CON ID NOMBRE Y PONLE EL CONTENIDO DE DATOS.NOMBRE
+            document.querySelector('#Apellidos').textContent =datos.Apellidos  //BUSCA EL ELEMENTO CON ID APELLIDOS Y PONLE EL CONTENIDO DE DATOS.APELLIDOS
+            document.querySelector('#Email').textContent =datos.Email           //BUSCA EL ELEMENTO CON ID APELLIDOS Y PONLE EL CONTENIDO DE DATOS.EMAIL
+        })
+            
+
+    
+    </script>
+</body>
+</html>
+
