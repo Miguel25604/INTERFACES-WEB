@@ -10,3 +10,55 @@
 <p>Puedo continuar con HTML.puro </p>
 */
 ?>
+
+<?php
+/*
+ $agenda = [];          // Array vacio
+ $agenda = [1] => "Juan"; // Asignacion de valor a un indice
+ $agenda = [2] => "Ana";
+*/
+
+ ?>
+
+ <?php
+/*
+    $agenda[0] = "Jose Vicente";
+    $agenda[1] = "Juan";
+    var_dump($agenda);
+    echo "<br>";
+    array_push($agenda,"Jorge");
+    var_dump($agenda);
+    echo "<br>";
+    array_pop($agenda);
+    var_dump($agenda);
+    */
+
+?>
+
+<?php
+    
+    $agenda["nombre"] = "Jose Vicente";
+    $agenda["email"] = "info@josevicentecarratala.com";
+    $agenda["telefono"] = "6345646";
+    var_dump($agenda);
+    
+?>
+
+<?php
+    //MATRIZ
+    /*
+    $agenda[0]["nombre"] = "Jose Vicente";
+    $agenda[0]["email"] = "info@josevicentecarratala.com";
+    $agenda[0]["telefono"] = "6345646";
+
+    $agenda[1]["nombre"] = "Juan";
+    $agenda[1]["email"] = "juan@josevicentecarratala.com";
+    $agenda[1]["telefono"] = "6345646";
+
+    $agenda[2]["nombre"] = "Jorge";
+    $agenda[2]["email"] = "jorge@josevicentecarratala.com";
+    $agenda[2]["telefono"] = "6345646";
+
+    var_dump($agenda);
+    */
+?>
