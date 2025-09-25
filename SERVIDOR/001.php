@@ -1,3 +1,6 @@
+
+<?php
+/*
 <p>Un archivo PHP puede contener a HTML </p>
 
     <?php
@@ -5,3 +8,5 @@
     ?>
 
 <p>Puedo continuar con HTML.puro </p>
+*/
+?>
