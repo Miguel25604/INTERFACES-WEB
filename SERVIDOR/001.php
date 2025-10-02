@@ -63,7 +63,70 @@
     */
 ?>
 
+
+//Bucle for
+
 <?php
+/*
      for($dia =1; $dia <= 31; $dia++){
         echo "Hoy es el dia": .$dia. "del mes <br>";
      }
+        */
+?>
+
+<?php
+    //Bucle do while
+    $dia = 1;
+    do{
+        echo "te digo hola";
+    }while($dia > 5);
+?>
+
+<?php
+    //Bucle while
+    while($dia<=31){
+        echo "hoy es el dia ".$dia." del mes <br>";
+    }
+    
+?>
+
+<?php
+    //Condicional if
+    $edad = 45;
+    if($edad < 30){
+        echo "Eres un joven";
+    }
+    
+?>
+
+<?php
+    //Condicional if else
+    $edad = 45;
+    if($edad < 30){
+        echo "Eres un joven";
+    }else{
+        echo "ya no eres un joven";
+    }
+    
+?>
+<?php
+    //Condicional if else anidado
+    $edad = 45;
+    if($edad < 30){
+        if($edad < 10){
+        
+            echo "Eres un niño";
+        }else{
+            echo "Eres un joven";
+        }
+        
+    }else{
+        if($edad < 70){
+        
+            echo "Ya no eres un joven";
+        }else{
+            echo "Eres un senior";
+        }
+    }
+    
+?>
