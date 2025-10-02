@@ -130,3 +130,46 @@
     }
     
 ?>
+<?php
+    //Condicional if else if
+    $edad = 45;
+    if($edad < 10){
+        echo "eres un niño";
+    }else if($edad >= 10 && $edad < 30){
+        echo "eres un joven";
+    }else if($edad >= 30 && $edad < 70){
+        echo "ya no eres un niño";
+    }else if($edad >= 70){
+        echo "eres un senior";
+    }
+    
+?>
+<?php
+    //Condicional switch
+    $diadelasemana = "lunes";
+   switch($diadelasemana){
+       case "lunes":
+           echo "hoy es el peor día de la semana";
+           break;
+        case "martes":
+           echo "hoy es el segundo peor día de la semana";
+           break;
+        case "miercoles":
+           echo "Ya estamos a mitad de semana";
+            break;
+        case "jueves":
+           echo "Ya casi es viernes";
+           break;
+        case "viernes":
+           echo "Por fin es viernes";
+           break;
+        case "sabado":
+           echo "hoy es el mejor día de la semana";
+           break;
+        case "domingo":
+           echo "Parece mentira que mañana ya sea lunes";
+           break;
+           
+   }
+    
+?>
