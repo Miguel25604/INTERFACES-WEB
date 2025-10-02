@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aprendiendo JavaScript</title>
+</head>
+<body>
+     <script>
+        /*
+         class Persona{
+                constructor(nombre, edad) {
+                    this.nombre = nombre;
+                    this.edad = edad;
+                }
+            }
+                */
+
+                
+            class Persona{
+                constructor(nombre, edad) {
+                    this.nombre = nombre;
+                    this.edad = edad;
+                }
+                
+            saludar(){
+                console.log("Hola, me llamo " + this.nombre + " y tengo " + this.edad + " años.");
+            }
+            }
+            let persona1 = new Persona("Jose Vicente",46);
+            console.log(persona1);
+
+            persona1.saludar();
+
+            let persona = [];
+            persona["nombre"] = "Jose Vicente";
+            persona["edad"] = 46;
+            console.log(persona);
+
+            let persona01 = {nombre: "Jose Vicente", edad: 46};
+            console.log(persona01);
+
+            console.log(persona1["nombre"]);
+            console.log(persona1["edad"]); 
+
+            class fecha{
+                constructor(dia, mes, año) {
+                    this.dia = dia;
+                    this.mes = mes;
+                    this.anio = año;
+                }
+            }
+            
+            let fecha1 = new fecha(20, 10, 2023);
+            console.log(fecha1);
+
+
+        </script>
+</body>
+</html>
