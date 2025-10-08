@@ -1,0 +1,23 @@
+body{
+    background: blue;
+    font-family: sans-serif;
+}
+
+form{
+    background: white;
+    margin: auto;
+    width: 200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+input{
+    padding: 5px;
+}
+
+input[type="submit"]{
+    background: blue;
+    color: white;
+    border: none;
+}
