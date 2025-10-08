@@ -22,7 +22,7 @@ $num_paginas = $_POST['num_paginas'];
 
 $db = new SQLite3('biblioteca.db'); //Creamos la base de datos y conexion
 
-//Creamos la tabla libros si no existe
+//
 $db->exec("CREATE TABLE IF NOT EXISTS libros(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     Titulo TEXT, isbn TEXT, autor TEXT,
@@ -40,7 +40,7 @@ $num_paginas=$_POST['num_paginas'];
 $db->exec("INSERT INTO libros (Titulo,isbn,autor,editorial,categoria,num_paginas)
 VALUES ('$Titulo','$isbn','$autor','$editorial','$categoria',$num_paginas)");
 
-$_POST[num_paginas])");
+
 echo "Libro insertado correctamente";
 
 ?>
