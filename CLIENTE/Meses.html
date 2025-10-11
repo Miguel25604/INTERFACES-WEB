@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>EJERCICIO CALENDARIO</title>
+</head>
+<body>
+
+    <script>
+        const salida = document.getElementById("salida");
+
+        function mostrar(texto) {
+            salida.innerHTML += texto + "<br>";
+        }
+
+        const cumpleaños = {mes: "Dciembre", dia: 17, año: 2004};
+
+        fetch("meses.json")
+            .then(respuesta => respuesta.json())
+            .then(meses => {
+                let mesesPasado = 0;
+
+                for (const item of meses) {
+                    const nombre = item.nombre;
+                    const dias = item.dias;
+
+                    mostrar("Empezamos" + nombre + "!");
+                    mostrar("");
+
+                    for (let dia = 1; dia <= dias; dia++) {
+                        mostrar("Hoy es " + dia + " de " + nombre);
+
+                        if (nombre === cumpleaños.mes && dia === cumpleaños.dia) {
+                            mostrar("Feliz cumpleaños!!!");
+
+                        } else {
+                            mostrar("Hoy es el día "+ dia + " del mes " + nombre + "."); 
+                        }
+                    }
+                    mesesPasado++;
+                    mostrar("");
+                    mostrar("Ya Hemos pasado " + mesesPasado + " meses de este año.");
+                    mostrar("");
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar el archivo JSON:", error);
+            });
+        
+
+                 
+
+
+
+
+    </script>
+</body>
+</html>
