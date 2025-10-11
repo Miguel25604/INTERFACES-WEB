@@ -30,6 +30,7 @@
 
 
     /* ARRAY TODOS LOS NUMEROS AL FINAL DEL ARRAY */
+    
     $numeros = array();
 
     $numeros[] = 4;
@@ -38,6 +39,7 @@
     $numeros[] = 16;
     
     /*MOSTRAMOS EL ARRAY */
+    
     var_dump($numeros);
 
 
@@ -53,4 +55,36 @@
 
     echo "Array despues de eliminar el ultimo elemento ($ultimo): <br>";
     var_dump($numeros);
+    
+ 
+    $numeros = array(4,8,15);
+
+    // Quitamos el elemento en la posición 1 (el 8)
+    array_splice($numeros, 1, 1);
+
+    var_dump($numeros);
+
+    
+
+    // CALCULAR LA SUMA DE TODOS LOS ELEMENTOS DEL ARRAY
+    $suma = array_sum($numeros);
+
+    //CALCULAR EL PRODUCTO
+    $producto = 1;
+    foreach($numeros as $num){
+        $producto *= $num;
+    }
+
+    //MULTIPLICAR POR EL NUMERO ELIMINADO
+    $resultadoSuma = $suma * $eliminado;
+    $resultadoProducto = $producto * $eliminado;   
+
+    // MOSTRAR RESULTADOS
+    echo "Numero eliminado: $eliminado <br>";
+    echo "Suma de los elementos  x eliminado = $resultadoSuma <br>";
+    echo "Producto de los elementos x eliminado = $resultadoProducto <br>";
+
+
+
+
 ?>
