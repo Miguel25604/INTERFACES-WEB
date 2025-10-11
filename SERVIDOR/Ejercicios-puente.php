@@ -76,6 +76,7 @@
     }
 
     //MULTIPLICAR POR EL NUMERO ELIMINADO
+    
     $resultadoSuma = $suma * $eliminado;
     $resultadoProducto = $producto * $eliminado;   
 
@@ -83,8 +84,6 @@
     echo "Numero eliminado: $eliminado <br>";
     echo "Suma de los elementos  x eliminado = $resultadoSuma <br>";
     echo "Producto de los elementos x eliminado = $resultadoProducto <br>";
-
-
 
 
 ?>
