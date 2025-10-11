@@ -1,56 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>EJERCICIO CALENDARIO</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-
+    <h1>Calendario</h1>
+    <div id="salida"></div>
     <script>
-        const salida = document.getElementById("salida");
 
-        function mostrar(texto) {
-            salida.innerHTML += texto + "<br>";
+
+      
+    const salida = document.getElementById("salida");
+
+    function mostrar(t = "") { salida.innerHTML += t + "<br>"; }
+
+    const cumpleaños = { mes: "Diciembre", dias: 17 };
+
+    fetch("./meses.json")
+      .then(r => r.json())
+      .then(meses => {
+        let mesesPasados = 0;
+        for (const item of meses) {
+          const nombreMes = item.mes;   
+          const diasDelMes = item.dias; 
+
+          mostrar("¡Empezamos " + nombreMes + "!");
+          mostrar();
+
+          for (let dia = 1; dia <= diasDelMes; dia++) {
+            if (nombreMes === cumpleaños.mes && dia === cumpleaños.dias) {
+              mostrar("¡Hoy es el día " + dia + " de " + nombreMes + " y es mi cumpleaños!");
+            } else {
+              mostrar("Hoy es el día " + dia + " de " + nombreMes + ".");
+            }
+          }
+
+          mesesPasados++;
+          mostrar();
+          mostrar("Ya hemos pasado " + mesesPasados + " meses de este año");
+          mostrar();
         }
-
-        const cumpleaños = {mes: "Dciembre", dia: 17, año: 2004};
-
-        fetch("meses.json")
-            .then(respuesta => respuesta.json())
-            .then(meses => {
-                let mesesPasado = 0;
-
-                for (const item of meses) {
-                    const nombre = item.nombre;
-                    const dias = item.dias;
-
-                    mostrar("Empezamos" + nombre + "!");
-                    mostrar("");
-
-                    for (let dia = 1; dia <= dias; dia++) {
-                        mostrar("Hoy es " + dia + " de " + nombre);
-
-                        if (nombre === cumpleaños.mes && dia === cumpleaños.dia) {
-                            mostrar("Feliz cumpleaños!!!");
-
-                        } else {
-                            mostrar("Hoy es el día "+ dia + " del mes " + nombre + "."); 
-                        }
-                    }
-                    mesesPasado++;
-                    mostrar("");
-                    mostrar("Ya Hemos pasado " + mesesPasado + " meses de este año.");
-                    mostrar("");
-                }
-            })
-            .catch(error => {
-                console.error("Error al cargar el archivo JSON:", error);
-            });
-        
-
-                 
-
-
-
+      })
+      .catch(err => mostrar("Error al cargar el archivo JSON: " + err.message));
 
     </script>
 </body>
