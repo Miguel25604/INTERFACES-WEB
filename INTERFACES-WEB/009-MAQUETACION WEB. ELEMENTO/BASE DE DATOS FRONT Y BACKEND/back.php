@@ -23,7 +23,6 @@
         <a href="">...</a>
       </nav>
       <section>
-        <button>Nuevo</button>
         <table>
             <thead>
                 <tr>
@@ -46,10 +45,25 @@
                     "</tr>";
                 }
                 ?>
-
-                
             </tbody>
         </table>
+        <style>
+            <section {display:flex; gap:20px;}
+            section table{flex:4;}
+            section form{flex:2;display:flex;flex-direction:column;gap:10px;}
+            section form input{padding:5px; border:1px solid steelblue;}
+        </style>
+        <form method="POST" action="?">
+            <?php
+            $basededatos = new SQLite3("miguel.db");
+            $resultados = $basededatos->query("PRAGMA table_info(post)");
+            while ($fila = $resultados->fetchArray()) {
+                echo
+                 '<input type="text" name="' . $fila['name'] . '" placeholder="' . $fila['name'] . '">';
+            }
+            ?>
+            <input type="submit">
+            </form>    
       </section>
     </main>
   </body>
