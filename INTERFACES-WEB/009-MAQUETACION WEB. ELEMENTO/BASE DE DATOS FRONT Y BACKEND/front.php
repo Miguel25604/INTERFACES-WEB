@@ -43,9 +43,10 @@
         $resultados = $basededatos->query("SELECT * FROM post");
         while ($fila = $resultados->fetchArray()) {
             echo "<article>";
-            echo "<h2>" . $fila['titulo'] . "</h2>";
-            echo "<p>" . $fila['fecha'] . "</p>";
-            echo "<div>" . $fila['contenido'] . "</div>";
+            echo "<h3>" . $fila['Titulo'] . "</h3>";
+             echo "<time>" . $fila['Fecha'] . "</time>";
+            echo "<p>" . $fila['Autor'] . "</p>";
+            echo "<p>" . $fila['texto'] . "</p>";
             echo "</article>";
         }
 
