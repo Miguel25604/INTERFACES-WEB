@@ -55,7 +55,25 @@ $comanda_array = explode(", ", $comanda);
     }
 echo "<br>";
 
+//Buscar un tipo de plato especifico en la comanda con strpos() y mostrarlo en pantalla
+$platoBuscado = "Paella";
+$cantidad = 1;
 
+foreach ($descomoponer as $item) {
+    // Verifica si el plato buscado está dentro del elemento actual
+    if (strpos($item, $platoBuscado) !== false) {
+        echo "El plato " . $platoBuscado . " se encuentra en la comanda.<br>";
+        echo "Cantidad: " . $cantidad . "<br>";
+        $encontrado = true; // Marca que se encontró
+        break; // Sale del bucle (ya lo encontró)
+    }
+}
+
+// Si después del bucle no se encontró el plato
+if (empty($encontrado)) {
+    echo "El plato " . $platoBuscado . " no se encuentra en la comanda.<br>";
+}
+?>
 
 
 
