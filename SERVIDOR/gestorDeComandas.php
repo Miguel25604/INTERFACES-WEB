@@ -93,7 +93,7 @@ if (strcasecmp($usuarioOriginal, strtoupper($usuarioOriginal)) === 0) {
 }
 echo "<br>";
 
-//Declaro una funcion que acceda a una variable global y muestre su valor actualizado dentro de la función.
+//Declaro una funcion, que acceda a la variable GLOBALS y muestre su valor actualizado dentro de la función.
 function pedidosEnCola() {
     $GLOBALS['cantidad'] += 1;
     echo "Cantidad de platos actualizada dentro de la función: " . $GLOBALS['cantidad'] . "<br>";
@@ -101,6 +101,19 @@ function pedidosEnCola() {
 pedidosEnCola();
 echo "<br>";
 
+//Funciones de verificación de tipos de datos con is_string() e is_numeric()
+if (is_string($producto)) {
+    echo "La variable producto es una cadena de texto.<br>";
+} else {
+    echo "La variable producto no es una cadena de texto.<br>";
+}
+
+if (is_numeric($precio)) {
+    echo "La variable precio es un número.<br>";
+} else {
+    echo "La variable precio no es un número.<br>";
+}
+echo "<br>";
 
 
 ?>
