@@ -73,6 +73,25 @@ foreach ($descomoponer as $item) {
 if (empty($encontrado)) {
     echo "El plato " . $platoBuscado . " no se encuentra en la comanda.<br>";
 }
+
+echo "<br>";
+//Comparar el nombre de usuario introducido mediante la URL con su version en mayusculas.
+//Uso Strcmp() para comparar las mayusculas y minusculas. 
+$usuarioOriginal = $_GET['usuario'];
+if (strcmp($usuarioOriginal, strtoupper($usuarioOriginal)) === 0) {
+    echo "El nombre de usuario está en mayúsculas.<br>";
+} else {
+    echo "El nombre de usuario no está en mayúsculas.<br>";
+}
+echo "<br>";
+// Uso strcasecmp() para comparar sin tener en cuenta mayusculas y minusculas.
+if (strcasecmp($usuarioOriginal, strtoupper($usuarioOriginal)) === 0) {
+    echo "El nombre de usuario es igual.<br>";
+} else {
+    echo "El nombre de usuario no es igual.<br>";
+}
+echo "<br>";
+
 ?>
 
 
