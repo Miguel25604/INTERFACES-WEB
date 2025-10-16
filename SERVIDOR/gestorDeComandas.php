@@ -75,6 +75,7 @@ if (empty($encontrado)) {
 }
 
 echo "<br>";
+
 //Comparar el nombre de usuario introducido mediante la URL con su version en mayusculas.
 //Uso Strcmp() para comparar las mayusculas y minusculas. 
 $usuarioOriginal = $_GET['usuario'];
@@ -91,6 +92,16 @@ if (strcasecmp($usuarioOriginal, strtoupper($usuarioOriginal)) === 0) {
     echo "El nombre de usuario no es igual.<br>";
 }
 echo "<br>";
+
+//Declaro una funcion que acceda a una variable global y muestre su valor actualizado dentro de la función.
+function pedidosEnCola() {
+    $GLOBALS['cantidad'] += 1;
+    echo "Cantidad de platos actualizada dentro de la función: " . $GLOBALS['cantidad'] . "<br>";
+}
+pedidosEnCola();
+echo "<br>";
+
+
 
 ?>
 
