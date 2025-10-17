@@ -1,0 +1,8 @@
+#Imagen base
+From php:8.4 -apache
+
+#Copiamos los archivos de la aplicacion al contenedor
+copy . /var/www/html/
+
+#Exponemos el puerto 80
+EXPOSE 80
