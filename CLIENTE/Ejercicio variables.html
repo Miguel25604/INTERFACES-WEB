@@ -18,9 +18,11 @@
         //Conversion de tipos
 
         let nombre = prompt("Ingrese tu nombre:");
+        if (!nombre) { nombre = "Cliente desconocido"; }
         console.log("Hola " + nombre + "!"); 
 
         let producto = prompt("Ingrese el nombre del producto:");
+        if (!producto) { producto = "Producto desconocido"; }
         console.log("Producto: " + producto);
 
         

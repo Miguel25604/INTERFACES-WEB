@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+</head>
+<body>
+    <script>
+
+       const libros = [
+    {
+        titulo: "Cien años de soledad",
+        autor: "Gabriel García Márquez",
+        disponible: true
+    },
+    {
+        titulo: "1984",
+        autor: "George Orwell",
+        disponible: false
+    },
+    {
+        titulo: "Rayuela",
+        autor: "Julio Cortázar",
+        disponible: true
+    },
+    {
+        titulo: "El nombre de la rosa",
+        autor: "Umberto Eco",
+        disponible: false
+    },
+    {
+        titulo: "Los detectives salvajes",
+        autor: "Roberto Bolaño",
+        disponible: true
+    }
+    
+    ]; 
+
+
+        const biblioteca = [];
+
+        libros.forEach(function(libro){
+        biblioteca.push(libro);
+    });
+    //Mostrar informacion de cada libro usando forEach
+    console.log("Libros en la biblioteca:");
+    biblioteca.forEach(function(libros){
+        console.log('"' + libros.titulo + ' "por ' + libros.autor + " - " + (libros.disponible ? " Disponible: " : "No disponible"));
+    });
+
+    //Ejemplo adicional: marcar todos los libros como no disponibles
+    biblioteca.forEach(function(libros){
+        libros.disponible = false;
+    }); 
+
+    console.log("\nDespues de actualizar disponibilidad:");
+    biblioteca.forEach(function(libros){
+        console.log('"' + libros.titulo + ' " - '  + (libros.disponible ? " Disponible: " : "No disponible"));
+    });
+         
+    </script>
+</body>
+</html>
