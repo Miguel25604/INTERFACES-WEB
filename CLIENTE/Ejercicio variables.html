@@ -8,24 +8,143 @@
 <body>
     <script>
         //Decalaración de variables
-        let nombreCliente = "Miguel de Cervantes";  //String
-        let nombreProducto = "Leche vegetal";   //String
-        let precioUnitario = 2.75;  //Number 
-        let cantidadComprada = 3;   //Number 
-        let esScocioClubEcoVida = true; //Boolean
-        let codigoDescuento = null;     //Null
+        let cliente; // noombre del cliente (String)
+        let producto; // nombre del producto (String)
+        let precio; // precio del producto (Number)
+        let cantidad; // cantidad de productos (Number)
+        let clubEcoVida; // pertenece al club EcoVida (Boolean)
+        let descuento = null; // nulo al inicio, luego sera numuero.
 
-        //Conversion de tipos
+        // VALIDACION DE STRINGS \\
+      while (true) {
+        nombre = prompt("Diga nombre del comprador :");
+        producto = prompt("Diga el producto que desea comprar:");
+ 
+        if (/\d/.test(nombre) || /\d/.test(producto)) {
+          alert("Por favor, inserte sólo letras.");
+          continue;
+        } else if (!nombre || !producto) {
+          alert("Por favor, no deje campos vacíos");
+          continue;
+        }
+        break;
+      }
+ 
+      // VALIDACIÓN DE LOS NÚMEROS \\
+      while (isNaN(precio) === true) {
+        try {
+          precio = parseFloat(prompt("Diga el precio del producto:"));
+ 
+          if (isNaN(precio)) {
+            throw new Error("El valor ingresado no es un número válido.");
+          }
+        } catch (error) {
+          alert(
+            "Por favor ingrese un valor numérico para el precio del producto:"
+          );
+        }
+      }
+      while (isNaN(cantidad) === true) {
+        try {
+          cantidad = parseFloat(prompt("Diga la cantidad:"));
+ 
+          if (isNaN(cantidad)) {
+            throw new Error("El valor ingresado no es un número válido.");
+          }
+        } catch (error) {
+          alert(
+            "Por favor ingrese un valor numérico para la cantidad de productos:"
+          );
+        }
+      }
+      // prettier-ignore
+      clubEcoVida =prompt("¿El cliente pertenece al club EcoVida? (y/n):").toLowerCase() === "y" ? true: false;
+ 
+      console.log("Nombre del comprador: " + nombre);
+      console.log("Producto: " + producto);
+      console.log("Precio del producto: $" + precio.toFixed(2));
+      console.log("Cantidad: " + cantidad);
+ 
+      if (cantidad >= 10) {
+        var mensaje = "Usted está comprando al por mayor...";
+        let alerta =
+          "Recuerde revisar si la cantidad es correctamente la que desea...";
+      }
+      console.log(mensaje);
+      //console.log(alerta);-> ReferenceError: alerta is not defined \\
+      /*Las variables declaradas con let son de ámbito de bloque, o sea, si las declaras dentro del If, sólo las puedes usar allí*/
+      /*Mientras que las variables declaradas con var tienen ámbito de función, como aquí no hay una función, se le puede llamar ya que se hace global*/
+ 
+      let intolerancia;
+      let codigoDescuento = null;
+      console.log("Intoleracia: " + typeof intolerancia);
+      console.log("codigoDescuento: " + typeof codigoDescuento);
+      console.log(intolerancia == codigoDescuento); //true
+      console.log(intolerancia === codigoDescuento); //false pq no son del mismo tipo.
+ 
+      /*
+        El operador '==' realiza coerción de tipos y además en JS hay una regla que dice explícitamente que null == undefined es True.
+        Mientras que '===' es más estricto con los tipos, los valores y tipos de variables deben ser exactos.
+        asi que object(null) != undefined
+      */
+ 
+      /*
+        Typeof(variableNull) devuelve un objeto desde la primera versión de JS en 1995
+        Esto es debido a como funciona JavaScript por detrás, resulta que JS utilizaba etiquetas binarias para indicar el tipo
+        Y tanto object como null tenian el identificador binario con solo ceros(object: 000 ; null: 00000000)
+        Por lo que null parece un objeto en la función typeof
+        No se ha resuelto este error debido a que rompería código legacy realizado en versiones antiguas de JS
+      */
+ 
+      let total = precio * cantidad;
+      let subTotal = total;
+      console.log(total);
+ 
+      if (total > 100) {
+        descuento = 0;
+        descuento = total * 0.1;
+        subTotal -= descuento;
+      }
+      if (clubEcoVida === true) {
+        descuento += total * 0.05;
+        subTotal -= descuento;
+      }
+      if (cantidad > 10) {
+          descuento += total * 0.03;
+          subTotal -= descuento;
+      }
+      total -= descuento;
 
-        let nombre = prompt("Ingrese tu nombre:");
-        if (!nombre) { nombre = "Cliente desconocido"; }
-        console.log("Hola " + nombre + "!"); 
+      
+      console.log("TOTAL: "+total)
+      console.log("DESCUENTO: "+descuento)
 
-        let producto = prompt("Ingrese el nombre del producto:");
-        if (!producto) { producto = "Producto desconocido"; }
-        console.log("Producto: " + producto);
-
+      if (esSinGluten || esVegano) {
+        console.log("Gracias por elegir opciones responsables (sin gluten o veganas).");
+        }
         
+
+        // SALIDA DEL PROGRAMA \\
+
+        const formatoEuro = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" });
+        const subtotalCalc = precio * cantidad; // precio total antes de descuentos
+
+        console.log("===== Resumen de compra EcoVida =====");
+        console.log("Cliente:", nombre);
+        console.log("Producto:", producto);
+        console.log("Precio total antes del descuento:", formatoEuro.format(subtotalCalc));
+        console.log("Descuento total aplicado:", formatoEuro.format(descuento));
+        console.log("Precio final después de los descuentos:", formatoEuro.format(total));
+
+      // Mensaje personalizado
+      
+      const alcanzoMaximoDescuento = (subtotalCalc > 100) && (clubEcoVida === true) && (cantidad > 10);
+    if (alcanzoMaximoDescuento) {
+        console.log("Gracias por apoyar un consumo responsable. Has obtenido el mayor descuento disponible.");
+    } else {
+        console.log("Tu compra es saludable y sostenible. Gracias por elegir EcoVida.");
+    }
+
     </script>
 </body>
 </html>
