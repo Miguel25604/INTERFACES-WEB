@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de open() y close()</title>
+</head>
+<body>
+    <button onclick="abrirVentana()">Abrir Ventana</button> 
+    <button onclick="cerrarVentana()">Cerrar Ventana</button>
+
+    <script>
+        let nuevaVentana;
+
+        function abrirVentana() {
+            nuevaVentana = window.open(
+                "https://www.bet365.es/",                     // URL vacía (una página en blanco)
+                "miVentana",            // nombre de la ventana
+                "width=400,height=300"  // características (tamaño)
+            );
+            nuevaVentana.document.write("<h1>¡Hola desde la nueva ventana!</h1>");
+        }
+
+        function cerrarVentana() {
+            if (nuevaVentana && !nuevaVentana.closed) {
+                nuevaVentana.close();
+            } else {
+                alert("No hay ventana abierta.");
+            }
+        }
+    </script>
+</body>
+</html>
+
