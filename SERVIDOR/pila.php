@@ -44,9 +44,9 @@ class Pila {
 
 $pila = new Pila();
 
-$pila->push("Manzana");
-$pila->push("Banana");
-$pila->push("Cereza");
+$pila->push(item: "Manzana");
+$pila->push(item: "Banana");
+$pila->push(item: "Cereza");
 
 echo "Elementos de la pila:\n";
 $pila->mostrar();
