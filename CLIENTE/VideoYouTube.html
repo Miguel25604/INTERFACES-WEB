@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de iframe Youtube con JavaScript</title>
+</head>
+<body>
+    <h1>Video insertado con JavaScript</h1>
+    <div id="video-container"></div>
+
+    <script>
+        const iframe = document.createElement("iframe");
+
+        iframe.width = innerWidth;
+        iframe.height = innerHeight;
+        iframe.src = "https://www.youtube.com/embed/0F2z3qOwK4w?si=4y0NihU3bBDkqAEH";
+        iframe.title = "Ricardo dando vueltas";
+        iframe.frameBorder = "0";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.referrerPolicy = "strict-origin-when-cross-origin";
+        iframe.allowFullscreen = true;
+
+        // Insertar el iframe en el contenedor
+        document.getElementById("video-container").appendChild(iframe);
+    </script>
+</body>
+</html>
+
