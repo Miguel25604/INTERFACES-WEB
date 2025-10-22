@@ -38,6 +38,7 @@
     
     <template id="plantillatarjeta">
       <article class="tarjeta">
+        <button class="eliminar">❌</button>
         <header>
           Cabecera de prueba
         </header>
@@ -122,6 +123,7 @@
         {"titulo":"Titulo 3","texto":"texto 3","rowspan":"1","colspan":"1"}
 
       ]
+      tarjetas = JSON.parse(localStorage.getItem("cartitas"))
       function repintar(){
         let contenedortarjetas = document.querySelector("main");
         contenedortarjetas.innerHTML = ""

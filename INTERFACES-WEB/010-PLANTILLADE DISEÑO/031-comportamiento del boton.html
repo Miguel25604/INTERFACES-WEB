@@ -17,7 +17,7 @@
         display:inline-block;text-align:center;line-height:20px;text-transform:uppercase;
       }
       main{display:grid;grid-template-columns:auto auto auto auto;gap:10px;padding:10px;}
-      .tarjeta{background:white;border-radius:5px;box-shadow:0px 2px 4px rgba(0,0,0,0.3);overflow:hidden;transition:all 1s;}
+      .tarjeta{background:white;box-shadow:0px 2px 4px rgba(0,0,0,0.3);overflow:hidden;transition:all 1s;}
       .tarjeta:hover{transform:scale(1.02,1.02);}
       .tarjeta header{background:purple;color:white;padding:10px;}
       .tarjeta section{padding:10px;}
@@ -35,9 +35,16 @@
         <span class="texto">Letra</span>
       </button>
     </template>
-    
+    <style>
+      .tarjeta{position:relative;border-radius:12px;}
+      .tarjeta .eliminar{
+        position:absolute;right:2px;top:2px;width:20px;height:20px;background:white;
+        font-size:10px;line-height:11px;text-align:center;
+      }
+    </style>
     <template id="plantillatarjeta">
       <article class="tarjeta">
+        <button class="eliminar">❌</button>
         <header>
           Cabecera de prueba
         </header>
@@ -122,6 +129,7 @@
         {"titulo":"Titulo 3","texto":"texto 3","rowspan":"1","colspan":"1"}
 
       ]
+      tarjetas = JSON.parse(localStorage.getItem("cartitas"))
       function repintar(){
         let contenedortarjetas = document.querySelector("main");
         contenedortarjetas.innerHTML = ""
@@ -132,6 +140,9 @@
           clontarjeta.querySelector("section").textContent = tarjetas[i].texto
           clontarjeta.querySelector("article").style.gridRow = "span "+tarjetas[i].rowspan
           clontarjeta.querySelector("article").style.gridColumn = "span "+tarjetas[i].colspan
+          clontarjeta.querySelector(".eleminar").onclick = function(){
+            alert("Voy a eliminar la tarjeta, pero no se muy bien cómo")
+          }
           contenedortarjetas.appendChild(clontarjeta)
         }
       }

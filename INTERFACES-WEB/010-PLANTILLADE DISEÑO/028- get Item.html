@@ -25,6 +25,7 @@
   </head>
   <body>
     <nav>
+      
     </nav>
     <main>
     </main>
@@ -45,58 +46,37 @@
         </section>
       </article>
     </template>
-
+    
     <style>
-        #contienemodal{
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0px;
-            left: 0px;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            display: none;
-        }
-
-        #modal{
-            width: 500px;
-            height: 300px;
-            padding: 20px;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0px 5px 10px black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;gap: 5px;
-
-        }
-        #modal input, #modal textarea, #modal button{
-            border: 1px solid indigo;
-        }
+      #contienemodal{
+        position:absolute;width:100%;height:100%;top:0px;left:0px;background:rgba(0,0,0,0.6);
+        display:flex;justify-content: center;align-items: center;
+        display:none;
+      }
+      #modal{
+        width:500px;height:300px;padding:20px;background:white;border-radius:5px;
+        box-shadow:0px 5px 10px black;
+        display:flex;flex-direction:column;justify-content: center;gap:5px; 
+      }
+      #modal input,#modal textarea,#modal button{
+        border:1px solid indigo;width:100%;
+      }
     </style>
     <div id="contienemodal">
-        <div id="modal">
-            <label for="titulo_nueva_tarjeta">Título de la nueva tarjeta</label>
-            <input type="text" id="titulo_nueva_tarjeta">
-
-            <label for="contenido_nueva_tarjeta">Contenido de la nueva tarjeta</label>
-            <textarea id="contenido_nueva_tarjeta"></textarea>
-
-            <label for="columnas_nueva_tarjeta">Expansión de columnas</label>
-            <input type="number" id="columnas_nueva_tarjeta" min="1" max="5" value="1" step="1">
-
-            <label for="filas_nueva_tarjeta">Expansión de filas</label>
-            <input type="number" id="filas_nueva_tarjeta" min="1" max="5" value="1" step="1">
-
-            <label for="color_nueva_tarjeta">Color</label>
-            <input type="color" id="color_nueva_tarjeta">
-
-            <button id="guardatarjeta">Guardar</button>
-        </div>
+      <div id="modal">
+        <label for="titulo_nueva_tarjeta">Título de la nueva tarjeta</label>
+        <input type="text" id="titulo_nueva_tarjeta">
+        <label for="contenido_nueva_tarjeta">Contenido de la nueva tarjeta</label>
+        <textarea id="contenido_nueva_tarjeta"></textarea>
+        <label for="columnas_nueva_tarjeta">Expansión de columnas</label>
+        <input type="number" id="columnas_nueva_tarjeta" min=1 max=5 value=1 step=1>
+        <label for="filas_nueva_tarjeta">Expansión de filas</label>
+        <input type="number" id="filas_nueva_tarjeta" min=1 max=5 value=1 step=1>
+        <label for="color_nueva_tarjeta">Color</label>
+        <input type="color" id="color_nueva_tarjeta">
+        <button id="guardatarjeta">Guardar</button>
+      </div>
     </div>
-        </div>
     <script>
       /////////////////////////////// POBLAR MENU ////////////////////////////////////////////
       
@@ -115,7 +95,7 @@
       
       let boton_nuevo = document.createElement("button");
       boton_nuevo.textContent = "Crear nuevo elemento"
-      boton_nuevo.onclick=function(){
+      boton_nuevo.onclick = function(){
         document.querySelector("#contienemodal").style.display = "flex"
       }
       contenedor.appendChild(boton_nuevo);
@@ -123,42 +103,40 @@
       let boton_guardatarjeta = document.querySelector("#guardatarjeta")
       boton_guardatarjeta.onclick = function(){
         let objeto = {
-            "titulo": document.querySelector("#titulo_nueva_tarjeta").value,
-            "texto": document.querySelector("#contenido_nueva_tarjeta").value,
-            "rowspan": document.querySelector("#filas_nueva_tarjeta").value,
-            "colspan": document.querySelector("#columnas_nueva_tarjeta").value
+          "titulo":document.querySelector("#titulo_nueva_tarjeta").value,
+          "texto":document.querySelector("#contenido_nueva_tarjeta").value,
+          "rowspan":document.querySelector("#filas_nueva_tarjeta").value,
+          "colspan":document.querySelector("#columnas_nueva_tarjeta").value
         }
-
         tarjetas.push(objeto)
         localStorage.setItem("cartitas",JSON.stringify(tarjetas));
-        repintar(); ////////////////////////////////////////// VUELVE A PINTAR LAS TARJETAS
+        repintar(); ///////////////////////////////// VUELVE A PINTAR LAS TARJETAS
         document.querySelector("#contienemodal").style.display = "none"
       }
+      
       /////////////////////////////// POBLAR TARJETAS ////////////////////////////////////////////
       
       let tarjetas = [
         {"titulo":"Titulo 1","texto":"texto 1","rowspan":"1","colspan":"1"},
         {"titulo":"Titulo 2","texto":"texto 2","rowspan":"1","colspan":"1"},
-        {"titulo":"Titulo 3","texto":"texto 3","rowspan":"1","colspan":"1"},
-  
+        {"titulo":"Titulo 3","texto":"texto 3","rowspan":"1","colspan":"1"}
+
       ]
-        tarjetas = JSON.parse(localStorage.getItem("cartitas")) 
-        function repintar(){
-            let contenedortarjetas = document.querySelector("main");
+      tarjetas = JSON.parse(localStorage.getItem("cartitas"))
+      function repintar(){
+        let contenedortarjetas = document.querySelector("main");
         contenedortarjetas.innerHTML = ""
         let plantillatarjeta = document.querySelector("#plantillatarjeta");
         for(let i = 0;i<tarjetas.length;i++){
-            let clontarjeta = plantillatarjeta.content.cloneNode(true); 
-            clontarjeta.querySelector("header").textContent = tarjetas[i].titulo
-            clontarjeta.querySelector("section").textContent = tarjetas[i].texto
-            clontarjeta.querySelector("article").style.gridRow = "span "+tarjetas[i].rowspan
-            clontarjeta.querySelector("article").style.gridColumn = "span "+tarjetas[i].colspan
-            contenedortarjetas.appendChild(clontarjeta)
+          let clontarjeta = plantillatarjeta.content.cloneNode(true); 
+          clontarjeta.querySelector("header").textContent = tarjetas[i].titulo
+          clontarjeta.querySelector("section").textContent = tarjetas[i].texto
+          clontarjeta.querySelector("article").style.gridRow = "span "+tarjetas[i].rowspan
+          clontarjeta.querySelector("article").style.gridColumn = "span "+tarjetas[i].colspan
+          contenedortarjetas.appendChild(clontarjeta)
+        }
       }
-        }  
-        
-        repintar();
-      
+      repintar(); /////////////////// PARA QUE SE EJECUTE AL PRINCIPIO
     </script>
   </body>
 </html>
