@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ejemplo de comunicación entre ventanas</title>
+</head>
+<body>
+  <button onclick="abrirVentana()">Abrir ventana</button>
+  <button onclick="cerrarVentana()">Cerrar ventana</button>
+
+  <script>
+    let nuevaVentana;
+
+    function abrirVentana() {
+      nuevaVentana = window.open("", "miVentana", "width=400,height=300");
+
+      // Escribir contenido en la nueva ventana con el charset correcto
+      nuevaVentana.document.write(`
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <title>Ventana hija</title>
+        </head>
+        <body>
+          <h1>Hola desde la nueva ventana!</h1>
+          <button onclick="enviarMensaje()">Enviar mensaje al padre</button>
+          <script>
+            function enviarMensaje() {
+              window.opener.postMessage("¡Hola, ventana principal!", "*");
+            }
+          <\/script>
+        </body>
+        </html>
+      `);
+    }
+
+    function cerrarVentana() {
+      if (nuevaVentana) {
+        nuevaVentana.close();
+      } else {
+        alert("No hay ventana abierta.");
+      }
+    }
+
+    window.addEventListener("message", (event) => {
+      alert("Mensaje recibido de la ventana hija: " + event.data);
+    });
+  </script>
+</body>
+</html>

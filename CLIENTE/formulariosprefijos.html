@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Formulario prefijos</title>
+  <script>
+    var miPopup;
+
+    function abreVentana() {
+      miPopup = window.open(
+        "prefijos.html",
+        "miwin",
+        "width=300,height=150,scrollbars=yes"
+      );
+      miPopup.focus();
+    }
+  </script>
+</head>
+<body>
+  <form name="formul">
+    <table cellspacing="3" cellpadding="3" border="0">
+      <tr>
+        <td align="center">Prefijo</td>
+        <td align="center">Número</td>
+      </tr>
+      <tr>
+        <td align="center">
+          <input type="text" name="prefijo" value="+" size="3" maxlength="3">
+          <input type="button" value="?" onclick="abreVentana()">
+        </td>
+        <td align="center">
+          <input type="text" name="numero" value="" size="10" maxlength="10">
+        </td>
+      </tr>
+    </table>
+  </form>
+</body>
+</html>

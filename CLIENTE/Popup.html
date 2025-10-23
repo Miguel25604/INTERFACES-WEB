@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Popup con URL</title>
+  <script>
+    var miPopup;
+
+    // Abrir la ventana popup al cargar la página
+    function abrirPopup() {
+      miPopup = window.open(
+        "about:blank",
+        "miventana",
+        "width=600,height=400,menubar=no"
+      );
+    }
+
+    // Función para mostrar la URL en el popup
+    function muestraURL() {
+      if (!miPopup || miPopup.closed) {
+        // Si la ventana fue cerrada, abrir otra
+        abrirPopup();
+      }
+      miPopup.location = document.formul.url.value;
+      miPopup.focus();
+    }
+
+    // Abrimos el popup automáticamente al cargar la página
+    window.onload = abrirPopup;
+  </script>
+</head>
+<body>
+  <h1>Mostrar URL en Popup</h1>
+  <form name="formul" onsubmit="return false;">
+    <input type="text" name="url" size="30" value="http://">
+    <input type="button" value="Mostrar URL en popup" onclick="muestraURL()">
+  </form>
+</body>
+</html>
