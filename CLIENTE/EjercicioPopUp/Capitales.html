@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Capitales internacionales</title>
+    <script>
+      function ponerCapital(capi) {
+        opener.document.formul.capital.value = capi;
+        window.close();
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Lista de capitales internacionales</h1>
+ 
+    <form name="fcapitales">
+      España:
+      <input type="button" value="Madrid" onclick="ponerCapital('Madrid')" />
+      <br /><br />
+ 
+      Holanda:
+      <input
+        type="button"
+        value="Amsterdam"
+        onclick="ponerCapital('Amsterdam')"
+      />
+      <br /><br />
+ 
+      Gran Bretaña:
+      <input type="button" value="London" onclick="ponerCapital('London')" />
+      <br /><br />
+ 
+      Estados Unidos:
+      <input
+        type="button"
+        value="Washington DC"
+        onclick="ponerCapital('Washington DC')"
+      />
+      <br /><br />
+ 
+      Bélgica:
+      <input
+        type="button"
+        value="Bruselas"
+        onclick="ponerCapital('Bruselas')"
+      />
+      <br /><br />
+ 
+      Grecia:
+      <input type="button" value="Atenas" onclick="ponerCapital('Atenas')" />
+      <br /><br />
+ 
+      Cuba:
+      <input
+        type="button"
+        value="La Habana"
+        onclick="ponerCapital('La Habana')"
+      />
+    </form>
+  </body>
+</html>
