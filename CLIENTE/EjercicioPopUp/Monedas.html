@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <title>Monedas internacionales</title>
+    <script>
+      function ponerMonedas(nom,simb) {
+        let currency = nom + " " +simb;
+        opener.document.formul.moneda.value = currency;
+        window.close();
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Lista de monedas internacionales</h1>
+ 
+    <form name="fmonedas">
+      España:
+      <input type="button" value="Euro -- €" onclick="ponerMonedas('Euro','€')" />
+      <br /><br />
+ 
+      Holanda:
+      <input type="button" value="Euro -- €" onclick="ponerMonedas('Euro','€')" />
+      <br /><br />
+ 
+      Gran Bretaña:
+      <input type="button" value="Libras Esterlinas -- £" onclick="ponerMonedas('Libras','£')" />
+      <br /><br />
+ 
+      Estados Unidos:
+      <input type="button" value="Dólar -- $" onclick="ponerMonedas('Dólar','$')" />
+      <br /><br />
+ 
+      Bélgica:
+      <input type="button" value="Euro -- €" onclick="ponerMonedas('Euro','€')" />
+      <br /><br />
+ 
+      Grecia:
+      <input type="button" value="Euro -- €" onclick="ponerMonedas('Euro','€')" />
+      <br /><br />
+ 
+      Cuba:
+      <input type="button" value="Pesos Bolibianos -- ₱" onclick="ponerMonedas('CUP','₱')" />
+     
+    </form>
+  </body>
+</html>
