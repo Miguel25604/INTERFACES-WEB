@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0"/>
+    <title>Formulario de Usuario</title>
+    <script>
+        // Función para abrir el popup
+        function abrirPopup() {
+        window.open("datosUsuario.html", "popupDatos", "width=500,height=500");
+        }
+
+        // Función que recibirá los datos desde el popup
+        function recibirDatos(nombre, apellido) {
+        document.getElementById("nombre").value = nombre;
+        document.getElementById("apellido").value = apellido;
+        }
+    </script>
+    </head>
+    <body>
+    <h2>Formulario de Usuario</h2>
+    <form>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre">
+        <button type="button" onclick="abrirPopup()">?</button>
+        <br><br>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido">
+        <br><br>
+
+        <input type="submit" value="Enviar">
+    </form>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width-device-width, initial-scale=1.0"/>
+        <title>Datos del Usuario </title>
+        
+        <script>
+            function pedirDatos() {
+                // Pedir datos al usuario
+                let nombre = prompt("Ingrese su nombre");
+                let apellido = prompt("Ingrese su apellido");
+
+                // Verificar que se ingresaron ambos datos
+                if (nombre && apellido) {
+                    const confirmar = confirm(`¿Desea enviar los datos?\n\nNombre: ${nombre}\nApellido: ${apellido}`);
+
+                    if (confirmar) {
+                        // Enviar datos al formulario principal
+                        window.opener.recibirDatos(nombre, apellido);
+                        window.close();
+                    } else {
+                        alert("Los datos no fueron enviados.");
+                    }
+                } else {
+                    alert("Debe ingresar ambos datos (nombre y apellido).");
+                }
+            }
+</script>
+</head>
+<body>
+  <h3>Completar Datos del Usuario</h3>
+  <button onclick="pedirDatos()">Ingresar datos</button>
+</body>
+</html>
+        </script>
+
+    </head>
+    <body>
+    </body>
+
