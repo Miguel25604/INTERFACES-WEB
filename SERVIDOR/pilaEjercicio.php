@@ -93,7 +93,7 @@
 $navegador = new Navegador();
 
 $navegador->abrirPagina("google.com");
-$navegador->abrirPagina("youtube.com");
+$navegador->abrirPagina("jocarsa.es");
 $navegador->abrirPagina("wikipedia.org");
 
 echo "<br>--- Ver página actual ---<br>";
