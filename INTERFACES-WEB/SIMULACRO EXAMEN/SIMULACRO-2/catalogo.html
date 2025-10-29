@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Catálogo </title>
+    <style>
+        @font-face {
+            font-family:"Mi fuente" ;
+            src: url(Ubuntu-R.ttf);
+        }
+         :root {
+            --color-principal: #004aad;   /* Azul principal */
+            --color-acento: #f7b500;      /* Amarillo acento */
+        }
+        body{
+            font-family: 'Ubuntu', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header, footer {
+        background-color: var(--color-principal);
+        color: white;
+        padding: 15px;
+      }
+      nav ul {
+        list-style: none;
+        padding: 0;
+      }
+      nav li {
+        display: inline-block;
+        margin: 0 15px;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+      }
+
+      main {
+        padding: 400px;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1> Mini tienda online </h1>
+      <nav>
+        <ul>
+          <li><a href="#">Inicio</a></li>
+          <li><a href="#">Productos</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>
+      </nav>
+
+    </header>
+
+    <main>
+      <!-- Contenido principal de la página -->
+        <section id="listado"></section>
+        <section id="formulario"></section>
+    </main>
+
+    <footer>
+      <!-- Pie de página -->
+    </footer>
+  </body>
+</html>
