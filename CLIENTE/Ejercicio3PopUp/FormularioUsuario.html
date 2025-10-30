@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulario de Usuario</title>
+</head>
+<body>
+  <h1>Formulario de Usuario</h1>
+
+  <div>
+    <label for="nombre"> Usuario</label>
+    <input type="text" id="usuario" name="usuario" placeholder="Introduce tu nombre" autocomplete="off" />
+    <button id="btnAyuda" title="Completar datos desde popup">?</button>
+  </div>
+  <br>
+  <div>
+    <label for="apellido">Email</label>
+    <input type="text" id="apellido" name="email" placeholder="Introduce tu email" autocomplete="off" />
+  </div>
+  
+  <script>
+    function crearCookie(usuario, valor, dias) {
+      const fecha = new Date();
+      fecha.setTime(fecha.getTime() + (dias * 24 * 60 * 60 * 1000));
+      const expira = "expires=" + fecha.toUTCString();
+      document.cookie = usuario + "=" + encodeURIComponent(valor) + ";" + expira + ";path=/";
+    }
+
+    function getCookie(usuario) {
+      const nombreEQ = usuario + "=";
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        let c = cookies[i].trim();
+        if (c.indexOf(nombreEQ) === 0) {
+          return decodeURIComponent(c.substring(nombreEQ.length));
+        }
+      }
+      return null;
+    }
+  </script>
+</body>
+
+</html>
