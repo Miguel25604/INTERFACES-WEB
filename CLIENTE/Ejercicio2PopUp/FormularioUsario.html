@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulario de Usuario</title>
+</head>
+<body>
+  <h1>Formulario de Usuario</h1>
+
+  <div>
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" name="nombre" placeholder="Introduce tu nombre" autocomplete="off" />
+    <button id="btnAyuda" title="Completar datos desde popup">?</button>
+  </div>
+
+  <div>
+    <label for="apellido">Apellido</label>
+    <input type="text" id="apellido" name="apellido" placeholder="Introduce tu apellido" autocomplete="off" />
+  </div>
+
+  <script>
+    (function(){
+    
+    const btnAyuda = document.getElementById('btnAyuda');
+    let popupRef = null;
+
+
+    btnAyuda.addEventListener('click', function(){
+    if (popupRef && !popupRef.closed) {
+    popupRef.focus();
+    return;
+}
+
+    const features = 'width=480,height=360,resizable=yes,scrollbars=yes';
+    popupRef = window.open('datosUsuario.html', 'popupDatosUsuario', features);
+    
+    if (!popupRef) {
+        alert('No se pudo abrir la ventana emergente.');
+    }
+    });
+    })();
+  </script>
+</body>
+</html>
+
+

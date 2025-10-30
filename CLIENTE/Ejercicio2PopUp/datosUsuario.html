@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Datos del Usuario (Popup)</title>
+</head>
+<body>
+    <h2>Completar datos</h2>
+    <button id="btnPedir">Pedir nombre y apellido</button>
+    <div id="resultado">Aún no has introducido datos.</div>
+    <button id="btnContinuar" disabled>Continuar</button>
+
+
+    <script>
+            (function(){
+                const btnPedir = document.getElementById('btnPedir');
+                const btnContinuar = document.getElementById('btnContinuar');
+                const divResultado = document.getElementById('resultado');
+
+
+                let nombre = '';
+                let apellido = '';
+
+
+                function pedirDatos(){
+                const n = prompt('Introduce tu NOMBRE:');
+                    if (n === null) return;
+                    const a = prompt('Introduce tu APELLIDO:');
+                    if (a === null) return;
+
+
+                    nombre = (n || '').trim();
+                    apellido = (a || '').trim();
+
+
+                if (!nombre && !apellido) {
+                    divResultado.textContent = 'No se han introducido datos.';
+                    btnContinuar.disabled = true;
+                    return;
+                }
+
+
+                divResultado.textContent = `Nombre: ${nombre} | Apellido: ${apellido}`;
+                btnContinuar.disabled = false;
+                    }
+
+
+                function enviarDatos(){
+                const ok = confirm('¿Deseas enviar estos datos al formulario principal?');
+                if (!ok) {
+                    pedirDatos();
+                    return;
+                }
+
+
+                if (!window.opener || window.opener.closed) {
+                    alert('No se encontró la ventana principal.');
+                    return;
+                }
+
+
+                try {
+                    window.opener.document.getElementById('nombre').value = nombre;
+                    window.opener.document.getElementById('apellido').value = apellido;
+                    window.close();
+                } catch (e) {
+                alert('Ocurrió un error al enviar los datos.');
+                }
+                }
+
+
+                btnPedir.addEventListener('click', pedirDatos);
+                btnContinuar.addEventListener('click', enviarDatos);
+                })();
+    </script>
+</body>
+</html>
