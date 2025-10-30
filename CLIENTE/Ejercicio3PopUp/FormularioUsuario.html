@@ -20,6 +20,7 @@
   </div>
   
   <script>
+    // crear cookie 
     function crearCookie(usuario, valor, dias) {
       const fecha = new Date();
       fecha.setTime(fecha.getTime() + (dias * 24 * 60 * 60 * 1000));
@@ -27,6 +28,7 @@
       document.cookie = usuario + "=" + encodeURIComponent(valor) + ";" + expira + ";path=/";
     }
 
+    // leer la cookie
     function getCookie(usuario) {
       const nombreEQ = usuario + "=";
       const cookies = document.cookie.split(';');
