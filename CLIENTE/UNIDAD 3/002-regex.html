@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validaciones con Regex en JavaScript</title>
+</head>
+<body>
+  <h1>Validación de Entrada con Expresiones Regulares</h1>
+
+  <input type="text" id="entrada" placeholder="Escribe algo..." />
+  <button onclick="validar()">Validar</button>
+  <div id="resultado"></div>
+
+  <script>
+    function validar() {
+      const entrada = document.getElementById("entrada").value.trim();
+      const resultado = document.getElementById("resultado");
+
+      // Expresiones regulares
+      const vacio = /^\s*$/;
+      const soloNumeros = /^[0-9]+$/; ///^\d+$/
+      const numeroDecimal = /^[0-9]+(\.[0-9]+)?$/;
+      const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$/;
+      const email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const nombreCompleto = /^[A-ZÁÉÍÓÚÑa-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑa-záéíóúñ]+){2}$/;
+
+      // Lógica de validación
+      if (vacio.test(entrada)) {
+        resultado.textContent = "El campo está vacío o tiene solo espacios.";
+        resultado.style.color = "red";
+      } else if (soloNumeros.test(entrada)) {
+        resultado.textContent = "La entrada contiene solo números enteros.";
+        resultado.style.color = "blue";
+      } else if (numeroDecimal.test(entrada)) {
+        resultado.textContent = "La entrada es un número decimal.";
+        resultado.style.color = "teal";
+      } else if (email.test(entrada)) {
+        resultado.textContent = "La entrada es un correo electrónico válido.";
+        resultado.style.color = "green";
+      } else if (nombreCompleto.test(entrada)) {
+        resultado.textContent = "La entrada parece ser un nombre completo (nombre y dos apellidos).";
+        resultado.style.color = "purple";
+      } else if (soloLetras.test(entrada)) {
+        resultado.textContent = "La entrada contiene solo letras (una palabra).";
+        resultado.style.color = "orange";
+      } else {
+        resultado.textContent = "La entrada contiene una mezcla de caracteres no reconocida.";
+        resultado.style.color = "gray";
+      }
+    }
+  </script>
+</body>
+</html>
