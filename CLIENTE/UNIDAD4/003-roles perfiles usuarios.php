@@ -37,7 +37,7 @@ function eliminarCookieUsuario() {
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["usuario"], $_POST["password"])) {
-    $usuarioInput  = strcmp($_POST["usuario"],);
+    $usuarioInput  = trim($_POST["usuario"],);
     $passwordInput = trim($_POST["password"]);
 
     $rolEncontrado = null;
