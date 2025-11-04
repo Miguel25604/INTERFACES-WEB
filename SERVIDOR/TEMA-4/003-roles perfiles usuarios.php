@@ -12,7 +12,29 @@ session_start();
 $usuarios = [
     ["usuario" => "Miguel",      "password" => "1234", "rol" => "admin"],
     ["usuario" => "Rafelbunyol", "password" => "0000", "rol" => "bibliotecario"],
-    ["usuario" => "PJ",          "password" => "1111", "rol" => "lector"],
+    ["usuario" => "Victor",      "password" => "1111", "rol" => "Lector"],
+];
+
+$roles = [
+
+    "admin" => [
+        "Gestion_usuarios",
+        "Ver informe del sistema",
+        "Configurar la aplicacion",
+    ],
+
+    "bibliotecarios" => [
+        "Catalogar_libros",
+        "Gestionar prestamos y devoluciones",
+        "Administrar reservas",
+    ],
+
+    "Lector" => [
+        "Novedades",
+        "Noticias",
+        "Libros nuevos",
+
+    ],
 ];
 
 // ----------------------------------------------------
@@ -21,12 +43,18 @@ $usuarios = [
 
 function crearCookieUsuario($usuario, $rol) {
     $datos = json_encode(["usuario" => $usuario, "rol" => $rol]);
-    setcookie("auth", $datos, time() + 3600, "/"); // 1 hora
+    setcookie("auth", $datos, time() + 5, "/"); 
 }
 
 function eliminarCookieUsuario() {
-    setcookie("auth", "", time() - 3600, "/");
+    setcookie("auth", "", time() - 5, "/");
 }
+
+
+
+
+
+
 
 // ----------------------------------------------------
 // PROCESO DE LOGIN (desde formulario)
