@@ -26,7 +26,7 @@
     }
 
     th {
-      background: #4CAF50;
+      background: #2d43be;
       color: white;
       font-weight: 600;
       text-transform: uppercase;
@@ -43,6 +43,19 @@
 
     td {
       color: #333;
+    }
+    button {
+      background-color:#2d43be;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #e100ff;
     }
     </style>
   </head>
@@ -96,8 +109,8 @@
           },
           {
           "id": 6,
-            "nombre": "David López",
-            "email": "david.lopez@example.com",
+            "nombre": " Pablo López",
+            "email": "pj.lopez@example.com",
             "telefono": "+34 592 987 654",
             
             "fecha_alta": "2026-07-08",
@@ -112,16 +125,24 @@
       cadena = "<tr>";
       claves.forEach(function(clave){
         cadena += "<th>"+clave+"</th>";
-      })
+      });
+
+      cadena += "<th>Acción</th>";
       cadena += "</tr>";
+
       clientes.forEach(function(cliente){
         cadena += "<tr>";
         for(let clave in cliente){
           cadena += "<td>"+cliente[clave]+"</td>"
         }
+        cadena += `<td><button onclick="saludar('${cliente.nombre}')">Saluda</button></td>`;
         cadena += "</tr>";
       })
       tabla.innerHTML = cadena;
+
+       function saludar(nombre){
+        alert("¡Hola, " + nombre + "!");
+      }
     </script>
   </body>
 </html>
