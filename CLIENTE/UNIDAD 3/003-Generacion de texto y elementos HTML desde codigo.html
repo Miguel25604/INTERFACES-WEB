@@ -23,6 +23,7 @@
     th, td {
       padding: 12px 16px;
       text-align: left;
+      text-align: center;
     }
 
     th {
@@ -31,6 +32,7 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      text-align: center;
     }
 
     tr:nth-child(even) {
@@ -69,15 +71,18 @@
             "email": "laura.gomez@example.com",
             "telefono": "+34 612 345 678",
             "fecha_alta": "2023-05-14",
-            "activo": true
+            "codigo_postal": "28013",
+            "balance": "1540$",
+            "activo": true,
           },
           {
             "id": 2,
             "nombre": "Carlos Martínez",
             "email": "carlos.martinez@example.com",
             "telefono": "+34 698 765 432",
-          
             "fecha_alta": "2024-01-20",
+            "codigo_postal": "28013",
+            "balance": "-120$",
             "activo": false
           },
           {
@@ -85,8 +90,10 @@
             "nombre": "Ana Torres",
             "email": "ana.torres@example.com",
             "telefono": "+34 634 112 233",
-            
             "fecha_alta": "2022-11-03",
+            "codigo_postal": "41001",
+            "balance": "320$",
+            
             "activo": true
           },
           {
@@ -94,8 +101,10 @@
             "nombre": "David López",
             "email": "david.lopez@example.com",
             "telefono": "+34 622 987 654",
-            
             "fecha_alta": "2024-07-08",
+            "codigo_postal": "50001",
+            "balance": "0$",
+            
             "activo": true
           },
           {
@@ -103,22 +112,16 @@
             "nombre": "María Fernández",
             "email": "maria.fernandez@example.com",
             "telefono": "+34 655 443 221",
-            
             "fecha_alta": "2023-03-25",
+            "codigo_postal": "15001",
+            "balance": "780$",
             "activo": false
           },
-          {
-          "id": 6,
-            "nombre": " Pablo López",
-            "email": "pj.lopez@example.com",
-            "telefono": "+34 592 987 654",
-            
-            "fecha_alta": "2026-07-08",
-            "activo": false
-            }
+          
         ]
 
-      let tabla = document.querySelector("table")
+      let tabla = document.querySelector("table");
+
       let primerelemento = clientes[0]
       let claves = Object.keys(primerelemento)
       
@@ -128,6 +131,8 @@
       });
 
       cadena += "<th>Acción</th>";
+      cadena += "<th>Localidad</th>";
+      cadena += "<th>Pobre</th>";
       cadena += "</tr>";
 
       clientes.forEach(function(cliente){
@@ -136,13 +141,23 @@
           cadena += "<td>"+cliente[clave]+"</td>"
         }
         cadena += `<td><button onclick="saludar('${cliente.nombre}')">Saluda</button></td>`;
+        
+        cadena += `<td><button class="saludar('${cliente.codigo_postal}')">Codigo</button></td>`;
+        cadena += `<td><button class="saludar('${cliente.balance}')">Balance</button></td>`;
+
         cadena += "</tr>";
       })
       tabla.innerHTML = cadena;
 
-       function saludar(nombre){
-        alert("¡Hola, " + nombre + "!");
-      }
+       // Asignar listeners a todos los botones
+        document.querySelectorAll(".btnSaluda").forEach(boton => {
+        boton.addEventListener("click", (e) => {
+          // Accede a la celda "nombre" (segunda columna del <tr>)
+          const fila = e.target.closest("tr");
+          const nombre = fila.children[1].textContent; 
+          alert("¡Hola, " + nombre + "!");
+        });
+      });
     </script>
   </body>
 </html>
