@@ -1,0 +1,33 @@
+<!-- Sustituye tu galería estática por esta dinámica -->
+<h2>Galería dinámica (desde SQLite via PHP)</h2>
+<section id="galeria"></section>
+
+<script>
+async function cargarPortafolio(){
+  try{
+    const res = await fetch('api.php');
+    const data = await res.json();
+    const gal = document.querySelector('#galeria');
+    gal.style.display='grid';
+    gal.style.gridTemplateColumns='repeat(6, 1fr)';
+    gal.style.gap='20px';
+    gal.innerHTML = '';
+    (data.items || []).forEach(item => {
+      const img = document.createElement('img');
+      img.src = item.image_url || 'img-placeholder.png';
+      img.alt = item.title + (item.description ? (' — ' + item.description) : '');
+      img.style.width='100%';
+      img.style.height='180px';
+      img.style.objectFit='cover';
+      img.style.border='1px solid white';
+      img.style.borderRadius='5px';
+      img.style.cursor='pointer';
+      img.addEventListener('click', () => abrirModalDesde(img, gal.querySelectorAll('img')));
+      gal.appendChild(img);
+    });
+  }catch(e){
+    console.error(e);
+  }
+}
+cargarPortafolio();
+</script>
