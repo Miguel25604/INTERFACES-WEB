@@ -139,9 +139,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["usuario"], $_POST["pa
     }
 }
 
-// ----------------------------------------------------
-// MIGRACIÓN COOKIE->SESIÓN (se mantiene igual)
-// ----------------------------------------------------
+
+// COOKIE DE SESIÓN 
+
 if (!isset($_SESSION["usuario"]) && isset($_COOKIE["auth"])) {
     $datos = json_decode($_COOKIE["auth"], true);
     if ($datos && isset($datos["usuario"], $datos["rol"])) {
@@ -151,9 +151,9 @@ if (!isset($_SESSION["usuario"]) && isset($_COOKIE["auth"])) {
     }
 }
 
-// ----------------------------------------------------
-// CERRAR SESIÓN (igual)
-// ----------------------------------------------------
+
+// CERRAR SESIÓN 
+
 if (isset($_GET["logout"])) {
     session_unset();
     session_destroy();
@@ -162,9 +162,9 @@ if (isset($_GET["logout"])) {
     exit;
 }
 
-// ----------------------------------------------------
+
 // OBTENER DATOS DE SESIÓN
-// ----------------------------------------------------
+
 $usuario = $_SESSION["usuario"] ?? null;
 $rol     = $_SESSION["rol"] ?? null;
 $permisos = $rol ? permisosDeRol($rol, $rolesPermisos) : [];
@@ -181,7 +181,7 @@ $permisos = $rol ? permisosDeRol($rol, $rolesPermisos) : [];
         .admin { color: red; }
         .bibliotecario { color: green; }
         .lector { color: blue; }
-        .profesor { color: purple; } /* añadido para el rol nuevo */
+        .profesor { color: purple; }
         .panel { border: 1px solid #ccc; padding: 10px; border-radius: 8px; margin-top: 10px; }
         .no { color:#999; text-decoration: line-through; }
         .ok { color:green; }
@@ -194,7 +194,7 @@ $permisos = $rol ? permisosDeRol($rol, $rolesPermisos) : [];
 
 <?php if (!$usuario): ?>
 
-    <!-- FORMULARIO DE LOGIN (igual) -->
+
     <?php if (isset($error)) echo "<p style='color:red;'>".htmlspecialchars($error)."</p>"; ?>
     <form method="post" action="">
         <label>Nombre de usuario:</label><br>
@@ -208,7 +208,6 @@ $permisos = $rol ? permisosDeRol($rol, $rolesPermisos) : [];
 
 <?php else: ?>
 
-    <!-- ENCABEZADO (se mantiene, solo añadí clase para profesor) -->
     <p>👋 Bienvenido, <strong><?php echo htmlspecialchars($usuario); ?></strong>
     (rol: <span class="<?php echo htmlspecialchars($rol); ?>"><?php echo htmlspecialchars($rol); ?></span>)</p>
     <p><a href="?logout=1">Cerrar sesión</a></p>
