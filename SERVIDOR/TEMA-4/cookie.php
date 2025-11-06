@@ -1,8 +1,7 @@
 <?php
 // ----- 1. Crear una cookie -----
 // setcookie(nombre, valor, tiempo_de_expiración, ruta);
-setcookie("usuario", "Rosa Melano", time() + 3600, "/"); 
-// La cookie expirará en 1 hora
+setcookie("usuario", time() + 5, "/"); 
 
 // ----- 2. Leer una cookie -----
 if (isset($_COOKIE["usuario"])) {

@@ -12,9 +12,14 @@ session_start();
 $usuarios = [
     ["usuario" => "Miguel",      "password" => "1234", "rol" => "admin"],
     ["usuario" => "Rafelbunyol", "password" => "0000", "rol" => "bibliotecario"],
-    ["usuario" => "Victor",      "password" => "1111", "rol" => "Lector"],
+    ["usuario" => "Victor",      "password" => "1111", "rol" => "lector"], 
+    ["usuario" => "Ana",         "password" => "2222", "rol" => "profesor"],
 ];
 
+// ----------------------------------------------------
+// (SE MANTIENE) ARRAY $roles ORIGINAL (no se usa para la lógica de permisos)
+// ----------------------------------------------------
+// *No lo elimino para respetar tu código; lo dejo tal cual estaba salvo que no afecta a la lógica nueva*
 $roles = [
 
     "admin" => [
@@ -37,10 +42,58 @@ $roles = [
     ],
 ];
 
-// ----------------------------------------------------
-// FUNCIONES AUXILIARES (COOKIES)
-// ----------------------------------------------------
 
+$rolesPermisos = [
+    'admin' => [
+        'gestion_usuarios'  => true,
+        'ver_informe'       => true,
+        'configurar_app'    => true,
+        'catalogar'         => true,
+        'prestamos'         => true,
+        'reservas'          => true,
+        'ver_novedades'     => true,
+        'ver_noticias'      => true,
+        'ver_libros_nuevos' => true,
+    ],
+    'bibliotecario' => [
+        'gestion_usuarios'  => false,
+        'ver_informe'       => false,
+        'configurar_app'    => false,
+        'catalogar'         => true,
+        'prestamos'         => true,
+        'reservas'          => true,
+        'ver_novedades'     => true,
+        'ver_noticias'      => false,
+        'ver_libros_nuevos' => true,
+    ],
+    'lector' => [
+        'gestion_usuarios'  => false,
+        'ver_informe'       => false,
+        'configurar_app'    => false,
+        'catalogar'         => false,
+        'prestamos'         => false,
+        'reservas' => false,
+        'ver_novedades' => true,
+        'ver_noticias' => true,
+        'ver_libros_nuevos' => true,
+    ],
+    
+    'profesor' => [
+        'gestion_usuarios' => false,
+        'ver_informe' => false,
+        'configurar_app' => false,
+        'catalogar' => false,
+        'prestamos' => false,
+        'reservas'  => true, 
+        'ver_novedades' => true,
+        'ver_noticias' => true,
+        'ver_libros_nuevos' => true,
+    ],
+];
+
+// ----------------------------------------------------
+// FUNCIONES COOKIES 
+// ----------------------------------------------------
 function crearCookieUsuario($usuario, $rol) {
     $datos = json_encode(["usuario" => $usuario, "rol" => $rol]);
     setcookie("auth", $datos, time() + 5, "/"); 
@@ -50,45 +103,35 @@ function eliminarCookieUsuario() {
     setcookie("auth", "", time() - 5, "/");
 }
 
+function permisosDeRol($rol, $rolesPermisos) {
+    $rol = strtolower($rol);
+    return $rolesPermisos[$rol] ?? [];
+}
 
-
-
-
-
-
-// ----------------------------------------------------
-// PROCESO DE LOGIN (desde formulario)
-// - Sólo usuario + password
-// - Se valida contra el array y se asigna el rol
-// - Si OK: se guarda en sesión y se crea cookie con usuario+rol
-// ----------------------------------------------------
+function tienePermiso($permisos, $permiso) {
+    return !empty($permisos[$permiso]);
+}
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["usuario"], $_POST["password"])) {
-    $usuarioInput  = trim($_POST["usuario"],);
+    $usuarioInput  = trim($_POST["usuario"]);
     $passwordInput = trim($_POST["password"]);
 
     $rolEncontrado = null;
     $usuarioValido = null;
 
     foreach ($usuarios as $u) {
-        // Comparación exacta del nombre tal cual lo tienes en el array
         if ($u["usuario"] === $usuarioInput && $u["password"] === $passwordInput) {
-            $rolEncontrado = $u["rol"];
+            $rolEncontrado = strtolower($u["rol"]);
             $usuarioValido = $u["usuario"];
             break;
         }
     }
 
     if ($rolEncontrado) {
-        // Guardamos sólo usuario y rol en sesión
         $_SESSION["usuario"] = $usuarioValido;
         $_SESSION["rol"]     = $rolEncontrado;
-
-        // Creamos cookie temporal con usuario+rol (no contraseña)
         crearCookieUsuario($usuarioValido, $rolEncontrado);
-
-        // Redirigimos para que el navegador establezca la cookie
         header("Location: 003-roles perfiles usuarios.php");
         exit;
     } else {
@@ -97,33 +140,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["usuario"], $_POST["pa
 }
 
 // ----------------------------------------------------
-// SI EXISTE COOKIE Y NO HAY SESIÓN, MIGRAR A SESIÓN
+// MIGRACIÓN COOKIE->SESIÓN (se mantiene igual)
 // ----------------------------------------------------
 if (!isset($_SESSION["usuario"]) && isset($_COOKIE["auth"])) {
     $datos = json_decode($_COOKIE["auth"], true);
     if ($datos && isset($datos["usuario"], $datos["rol"])) {
         $_SESSION["usuario"] = $datos["usuario"];
-        $_SESSION["rol"]     = $datos["rol"];
-        eliminarCookieUsuario(); // ya no necesitamos la cookie
+        $_SESSION["rol"]     = strtolower($datos["rol"]);
+        eliminarCookieUsuario();
     }
 }
 
 // ----------------------------------------------------
-// CERRAR SESIÓN
+// CERRAR SESIÓN (igual)
 // ----------------------------------------------------
 if (isset($_GET["logout"])) {
     session_unset();
     session_destroy();
-    eliminarCookieUsuario(); // eliminar también cualquier cookie vieja
+    eliminarCookieUsuario();
     header("Location: 003-roles perfiles usuarios.php");
     exit;
 }
 
 // ----------------------------------------------------
-// OBTENER DATOS DE SESIÓN (si existen)
+// OBTENER DATOS DE SESIÓN
 // ----------------------------------------------------
 $usuario = $_SESSION["usuario"] ?? null;
 $rol     = $_SESSION["rol"] ?? null;
+$permisos = $rol ? permisosDeRol($rol, $rolesPermisos) : [];
 ?>
 
 <!DOCTYPE html>
@@ -137,7 +181,11 @@ $rol     = $_SESSION["rol"] ?? null;
         .admin { color: red; }
         .bibliotecario { color: green; }
         .lector { color: blue; }
+        .profesor { color: purple; } /* añadido para el rol nuevo */
         .panel { border: 1px solid #ccc; padding: 10px; border-radius: 8px; margin-top: 10px; }
+        .no { color:#999; text-decoration: line-through; }
+        .ok { color:green; }
+        ul { line-height:1.6; }
     </style>
 </head>
 <body>
@@ -146,7 +194,7 @@ $rol     = $_SESSION["rol"] ?? null;
 
 <?php if (!$usuario): ?>
 
-    <!-- FORMULARIO DE LOGIN -->
+    <!-- FORMULARIO DE LOGIN (igual) -->
     <?php if (isset($error)) echo "<p style='color:red;'>".htmlspecialchars($error)."</p>"; ?>
     <form method="post" action="">
         <label>Nombre de usuario:</label><br>
@@ -160,45 +208,60 @@ $rol     = $_SESSION["rol"] ?? null;
 
 <?php else: ?>
 
-    <!-- PANEL PRINCIPAL -->
-    <p>👋 Bienvenido, <strong><?php echo htmlspecialchars($usuario); ?></strong> 
+    <!-- ENCABEZADO (se mantiene, solo añadí clase para profesor) -->
+    <p>👋 Bienvenido, <strong><?php echo htmlspecialchars($usuario); ?></strong>
     (rol: <span class="<?php echo htmlspecialchars($rol); ?>"><?php echo htmlspecialchars($rol); ?></span>)</p>
     <p><a href="?logout=1">Cerrar sesión</a></p>
 
     <div class="panel">
-        <?php if ($rol === "admin"): ?>
-            <h2>Panel de Administrador</h2>
-            <ul>
-                <li>Gestionar usuarios</li>
-                <li>Ver informes del sistema</li>
-                <li>Configurar la aplicación</li>
-            </ul>
+        <h2>Panel (controlado por <em>permisos</em>)</h2>
+        <ul>
+            <!-- Administración -->
+            <li class="<?php echo tienePermiso($permisos,'gestion_usuarios') ? 'ok' : 'no'; ?>">Gestionar usuarios</li>
+            <li class="<?php echo tienePermiso($permisos,'ver_informe') ? 'ok' : 'no'; ?>">Ver informes del sistema</li>
+            <li class="<?php echo tienePermiso($permisos,'configurar_app') ? 'ok' : 'no'; ?>">Configurar la aplicación</li>
 
-        <?php elseif ($rol === "bibliotecario"): ?>
-            <h2>Panel de Biblioteca</h2>
-            <ul>
-                <li>Catalogar libros</li>
-                <li>Gestionar préstamos y devoluciones</li>
-                <li>Administrar reservas</li>
-            </ul>
+            <!-- Biblioteca -->
+            <li class="<?php echo tienePermiso($permisos,'catalogar') ? 'ok' : 'no'; ?>">Catalogar libros</li>
+            <li class="<?php echo tienePermiso($permisos,'prestamos') ? 'ok' : 'no'; ?>">Gestionar préstamos y devoluciones</li>
+            <li class="<?php echo tienePermiso($permisos,'reservas') ? 'ok' : 'no'; ?>">Administrar reservas</li>
 
-        <?php elseif ($rol === "lector"): ?>
-            <h2>Panel de Libros</h2>
-            <ul>
-                <li>Novedades</li>
-                <li>Libros destacados</li>
-            </ul>
-
-        <?php else: ?>
-            <h2>Panel de Visitante</h2>
-            <ul>
-                <li>Ver artículos públicos</li>
-                <li>Suscribirse a noticias</li>
-            </ul>
-        <?php endif; ?>
+            <!-- Lectura/Noticias -->
+            <li class="<?php echo tienePermiso($permisos,'ver_novedades') ? 'ok' : 'no'; ?>">Novedades</li>
+            <li class="<?php echo tienePermiso($permisos,'ver_noticias') ? 'ok' : 'no'; ?>">Noticias</li>
+            <li class="<?php echo tienePermiso($permisos,'ver_libros_nuevos') ? 'ok' : 'no'; ?>">Libros nuevos</li>
+        </ul>
+        <p style="color:#666;">* Las opciones tachadas no están disponibles para tu rol.</p>
     </div>
 
 <?php endif; ?>
 
 </body>
 </html>
+
+
+
+<?php
+// ----- 1. Crear una cookie -----
+// setcookie(nombre, valor, tiempo_de_expiración, ruta);
+setcookie("usuario", "Rosa Melano", time() + 3600, "/");
+// La cookie expirará en 1 hora
+
+// ----- 2. Leer una cookie -----
+if (isset($_COOKIE["usuario"])) {
+    echo "👋 Bienvenido de nuevo, " . $_COOKIE["usuario"] . "!";
+} else {
+    echo "No se ha detectado ninguna cookie de usuario. Creando una...";
+}
+
+// ----- 3. Eliminar una cookie -----
+// Para borrar una cookie, se establece con una fecha expirada
+if (isset($_GET["borrar"])) {
+    setcookie("usuario", "", time() - 3600, "/");
+    echo "<br>La cookie ha sido eliminada.";
+}
+?>
+
+<hr>
+<a href="cookies.php">Refrescar página</a> |
+<a href="cookies.php?borrar=1">Borrar cookie</a>
