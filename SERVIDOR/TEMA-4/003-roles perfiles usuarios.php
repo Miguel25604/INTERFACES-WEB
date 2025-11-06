@@ -44,8 +44,8 @@ $roles = [
 
 $rolesPermisos = [
     'admin' => [
-        'gestion_usuarios'  => true,
-        'ver_informe'       => true,
+        'gestion_usuarios' => true,
+        'ver_informe' => true,
         'configurar_app'    => true,
         'catalogar'         => true,
         'prestamos'         => true,
