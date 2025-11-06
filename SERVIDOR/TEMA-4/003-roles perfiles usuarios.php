@@ -17,9 +17,8 @@ $usuarios = [
 ];
 
 // ----------------------------------------------------
-// (SE MANTIENE) ARRAY $roles ORIGINAL (no se usa para la lógica de permisos)
-// ----------------------------------------------------
-// *No lo elimino para respetar tu código; lo dejo tal cual estaba salvo que no afecta a la lógica nueva*
+
+
 $roles = [
 
     "admin" => [
