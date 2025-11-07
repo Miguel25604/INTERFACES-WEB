@@ -11,7 +11,7 @@
     }
 
     table {
-      width: 80%;
+      width: 90%;
       margin: auto;
       border-collapse: collapse;
       background: white;
@@ -22,7 +22,6 @@
 
     th, td {
       padding: 12px 16px;
-      text-align: left;
       text-align: center;
     }
 
@@ -32,7 +31,6 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      text-align: center;
     }
 
     tr:nth-child(even) {
@@ -59,103 +57,136 @@
     button:hover {
       background-color: #e100ff;
     }
+
+    .muted {
+      color:#777;
+      font-style: italic;
+    }
     </style>
   </head>
   <body>
     <table></table>
     <script>
-     clientes = [
-          {
-            "id": 1,
-            "nombre": "Laura Gómez",
-            "email": "laura.gomez@example.com",
-            "telefono": "+34 612 345 678",
-            "fecha_alta": "2023-05-14",
-            "codigo_postal": "28013",
-            "balance": "1540$",
-            "activo": true,
-          },
-          {
-            "id": 2,
-            "nombre": "Carlos Martínez",
-            "email": "carlos.martinez@example.com",
-            "telefono": "+34 698 765 432",
-            "fecha_alta": "2024-01-20",
-            "codigo_postal": "28013",
-            "balance": "-120$",
-            "activo": false
-          },
-          {
-            "id": 3,
-            "nombre": "Ana Torres",
-            "email": "ana.torres@example.com",
-            "telefono": "+34 634 112 233",
-            "fecha_alta": "2022-11-03",
-            "codigo_postal": "41001",
-            "balance": "320$",
-            
-            "activo": true
-          },
-          {
-            "id": 4,
-            "nombre": "David López",
-            "email": "david.lopez@example.com",
-            "telefono": "+34 622 987 654",
-            "fecha_alta": "2024-07-08",
-            "codigo_postal": "50001",
-            "balance": "0$",
-            
-            "activo": true
-          },
-          {
-            "id": 5,
-            "nombre": "María Fernández",
-            "email": "maria.fernandez@example.com",
-            "telefono": "+34 655 443 221",
-            "fecha_alta": "2023-03-25",
-            "codigo_postal": "15001",
-            "balance": "780$",
-            "activo": false
-          },
+      // Datos del ejercicio
+      const clientes = [
+        {
+          "id": 1,
+          "nombre": "Laura Gómez",
+          "email": "laura.gomez@example.com",
+          "telefono": "+34 612 345 678",
+          "fecha_alta": "2023-05-14",
+          "codigo_postal": "46100",
+          "balance": "1540€",
+          "activo": true
+        },
+        {
+          "id": 2,
+          "nombre": "Carlos Martínez",
+          "email": "carlos.martinez@example.com",
+          "telefono": "+34 698 765 432",
+          "fecha_alta": "2024-01-20",
+          "codigo_postal": "46980",
+          "balance": "-120€",
+          "activo": false
+        },
+        {
+          "id": 3,
+          "nombre": "Ana Torres",
+          "email": "ana.torres@example.com",
+          "telefono": "+34 634 112 233",
+          "fecha_alta": "2022-11-03",
+          "codigo_postal": "46920",
+          "balance": "320€",
+          "activo": true
+        },
+        {
+          "id": 4,
+          "nombre": "David López",
+          "email": "david.lopez@example.com",
+          "telefono": "+34 622 987 654",
+          "fecha_alta": "2024-07-08",
+          "codigo_postal": "46110",
+          "balance": "0€",
+          "activo": true
+        },
+        {
+          "id": 5,
+          "nombre": "María Fernández",
+          "email": "maria.fernandez@example.com",
+          "telefono": "+34 655 443 221",
+          "fecha_alta": "2023-03-25",
+          "codigo_postal": "46111",
+          "balance": "780€",
+          "activo": false
+        }
+      ];
+
+      // Mapeo de códigos postales a población
+      const poblacionesPorCP = {
+        "46100": "Burjassot",
+        "46980": "Paterna",
+        "46920": "Mislata",
+        "46110": "Godella",
+        "46111": "Rocafort"
+      };
+
+      function obtenerPoblacion(cp) {
+        return poblacionesPorCP[cp] || "Desconocida";
+      }
+
+      // Funciones para los botones
+      function mostrarCP(cp) {
+        alert("Código Postal: " + cp);
+      }
+
+      function saludar(nombre){
+        alert("¡Hola, " + nombre + "!");
+      }
+
+      const tabla = document.querySelector("table");
+      const claves = Object.keys(clientes[0]);
+
+      let html = "<tr>";
+      claves.forEach(clave => {
+        html += "<th>" + clave + "</th>";
+      });
+      html += "<th>Botón CP </th>";
+      html += "<th>Botón Balance </th>";
+      html += "<th>Población</th>";
+      html += "</tr>";
+
+      // Cuerpo de la tabla
+      clientes.forEach(cliente => {
+        html += "<tr>";
+
+        claves.forEach(clave => {
+          html += `<td>${cliente[clave]}</td>`;
+        });
+
+        // Estructura switch en lugar de if/else
+        switch (cliente.activo) {
+          case true:
+            html += `<td><button onclick="mostrarCP('${cliente.codigo_postal}')">Ver CP</button></td>`;
+            html += `<td><button class="btnBalance" data-balance="${cliente.balance}">Ver Balance</button></td>`;
+            break;
           
-        ]
+          case false:
+            html += `<td class="muted">—</td>`;
+            html += `<td class="muted">—</td>`;
+            break;
+        }
 
-      let tabla = document.querySelector("table");
-
-      let primerelemento = clientes[0]
-      let claves = Object.keys(primerelemento)
-      
-      cadena = "<tr>";
-      claves.forEach(function(clave){
-        cadena += "<th>"+clave+"</th>";
+        html += `<td>${obtenerPoblacion(cliente.codigo_postal)}</td>`;
+        html += "</tr>";
       });
 
-      cadena += "<th>Acción</th>";
-      cadena += "<th>Localidad</th>";
-      cadena += "<th>Pobre</th>";
-      cadena += "</tr>";
+      tabla.innerHTML = html;
 
-      clientes.forEach(function(cliente){
-        cadena += "<tr>";
-        for(let clave in cliente){
-          cadena += "<td>"+cliente[clave]+"</td>"
-        }
-        cadena += `<td><button onclick="saludar('${cliente.nombre}')">Saluda</button></td>`;
-        
-        cadena += `<td><button class="saludar('${cliente.codigo_postal}')">Codigo</button></td>`;
-        cadena += `<td><button class="saludar('${cliente.balance}')">Balance</button></td>`;
-
-        cadena += "</tr>";
-      })
-      tabla.innerHTML = cadena;
-
-       // Asignar listeners a todos los botones
-        document.querySelectorAll(".btnSaluda").forEach(boton => {
-        boton.addEventListener("click", (e) => {
-          // Accede a la celda "nombre" (segunda columna del <tr>)
-          const fila = e.target.closest("tr");
-          const nombre = fila.children[1].textContent; 
-          alert("¡Hola, " + nombre + "!");
+      // EventListener para los botones de balance
+      document.querySelectorAll(".btnBalance").forEach(boton => {
+        boton.addEventListener("click", e => {
+          const balance = e.currentTarget.getAttribute("data-balance");
+          alert("Balance: " + balance);
         });
       });
     </script>
