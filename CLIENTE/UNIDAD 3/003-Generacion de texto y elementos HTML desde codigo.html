@@ -121,7 +121,7 @@
         }
       ];
 
-      // Mapeo de códigos postales a población
+      
       const poblacionesPorCP = {
         "46100": "Burjassot",
         "46980": "Paterna",
@@ -163,7 +163,6 @@
           html += `<td>${cliente[clave]}</td>`;
         });
 
-        // Estructura switch en lugar de if/else
         switch (cliente.activo) {
           case true:
             html += `<td><button onclick="mostrarCP('${cliente.codigo_postal}')">Ver CP</button></td>`;
