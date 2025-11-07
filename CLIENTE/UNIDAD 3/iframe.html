@@ -1,11 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Listado de webs con iframe oculto</title>
+  <style>
+   
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background: rgba(0,0,0,.05); }
+    tbody tr:hover { background: rgba(0,0,0,.04); }
+    .actions button { cursor: pointer; }
+    .error { color: #b00020; font-size: .95rem; margin-top: 6px; display:none; }
+    .iframe-wrap { margin-top: 20px; }
+    iframe { width: 100%; height: 70vh; border: 1px solid #aaa; border-radius: 8px; }
+    .hidden { display: none !important; }
+    .controls { display: flex; gap: 8px; align-items: center; margin: 12px 0 24px; }
+    .badge { font-size: .85rem; padding: 4px 8px; border-radius: 999px; background: #eef; color: #223; }
+    .nota { font-size: .9rem; opacity: .8; }
+    .btn { padding: 8px 12px; border: 1px solid #999; border-radius: 8px; background: #f6f6f6; }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: #2b6cb0; color: white; border-color: #2b6cb0; }
+    .btn.ghost { background: transparent; }
+    .grid { display: grid; grid-template-columns: 1fr 2fr auto; gap: 8px; }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+    input { padding: 10px; border: 1px solid #aaa; border-radius: 8px; }
+    label { font-weight: 600; font-size: .95rem; }
+  </style>
 </head>
 <body>
-    
+  <h1>Ejemplos de iframes ocultos</h1>
+  <p class="nota">Pulsa "Ver" para mostrar el iframe y cargar la web correspondiente. <span class="badge">Nota</span> Algunas webs no permiten ser embebidas en iframes (cabeceras <code>X-Frame-Options</code>/<code>Content-Security-Policy</code>).</p>
+
+  <!-- 1) Array de objetos (nombre + url) -->
+  <script>
+    const webs = [
+      { nombre: 'OpenAI', url: 'https://openai.com' },
+      { nombre: 'Wikipedia (ES)', url: 'https://es.wikipedia.org' },
+      { nombre: 'MDN Web Docs', url: 'https://picsum.photos/600/800' },
+    ];
+  </script>
+
+  <!-- AMPLIACIÓN) Formulario para añadir nuevas webs con validación por regex -->
+  <section aria-labelledby="form-title">
+    <h2 id="form-title">Añadir nueva web</h2>
+    <form id="form-web" novalidate>
+      <div class="grid">
+        <div>
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" placeholder="Ej. Mi Blog" required />
+        </div>
+        <div>
+          <label for="url">URL</label>
+          <input id="url" name="url" type="url" placeholder="https://ejemplo.com" required />
+        </div>
+        <div style="display:flex; align-items:end;">
+          <button class="btn primary" type="submit">Añadir</button>
+        </div>
+      </div>
+      <p id="error" class="error">La URL no tiene un formato válido. Debe comenzar por http:// o https://</p>
+    </form>
+  </section>
+
+  <!-- 2) Tabla dinámica -->
+  <section aria-labelledby="tabla-title">
+    <h2 id="tabla-title">Listado de webs</h2>
+    <div class="controls">
+      <button id="ocultar-iframe" class="btn ghost" type="button">Ocultar iframe</button>
+      <span id="estado" class="badge">Iframe oculto</span>
+    </div>
+
+    <table aria-describedby="tabla-title">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Enlace</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-webs">
+        <!-- Filas generadas dinámicamente -->
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 3) Iframe inicialmente invisible -->
+  <div class="iframe-wrap">
+    <iframe id="visor" class="hidden" title="Visor de webs" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+  </div>
+
+  <script>
+    // --- Utilidades ---
+    const urlRegex = /^(https?:\/\/)([^\s.]+\.[^\s]{2,})(:\d+)?(\/\S*)?$/i;
+
+    const $tbody = document.getElementById('tbody-webs');
+    const $visor = document.getElementById('visor');
+    const $estado = document.getElementById('estado');
+    const $btnOcultar = document.getElementById('ocultar-iframe');
+    const $form = document.getElementById('form-web');
+    const $error = document.getElementById('error');
+
+    function setIframeVisible(visible) {
+      if (visible) {
+        $visor.classList.remove('hidden');
+        $estado.textContent = 'Iframe visible';
+      } else {
+        $visor.classList.add('hidden');
+        $estado.textContent = 'Iframe oculto';
+        $visor.removeAttribute('src');
+      }
+    }
+
+    function abrirEnIframe(url) {
+      $visor.src = url; // El contenido se establece aquí
+      setIframeVisible(true);
+    }
+
+    function crearFila(web, idx) {
+      const tr = document.createElement('tr');
+
+      const tdNombre = document.createElement('td');
+      tdNombre.textContent = web.nombre;
+
+      const tdEnlace = document.createElement('td');
+      const a = document.createElement('a');
+      a.href = web.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = web.url;
+      tdEnlace.appendChild(a);
+
+      const tdAcciones = document.createElement('td');
+      tdAcciones.className = 'actions';
+      const btnVer = document.createElement('button');
+      btnVer.className = 'btn';
+      btnVer.type = 'button';
+      btnVer.textContent = 'Ver';
+      btnVer.addEventListener('click', () => abrirEnIframe(web.url));
+
+      tdAcciones.appendChild(btnVer);
+
+      tr.appendChild(tdNombre);
+      tr.appendChild(tdEnlace);
+      tr.appendChild(tdAcciones);
+
+      return tr;
+    }
+
+    function renderTabla() {
+      // Limpia el tbody y vuelve a pintar
+      $tbody.innerHTML = '';
+      webs.forEach((web, idx) => {
+        $tbody.appendChild(crearFila(web, idx));
+      });
+    }
+
+    // --- Eventos UI ---
+    $btnOcultar.addEventListener('click', () => setIframeVisible(false));
+
+    $form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      $error.style.display = 'none';
+
+      const nombre = /** @type {HTMLInputElement} */(document.getElementById('nombre')).value.trim();
+      const url = /** @type {HTMLInputElement} */(document.getElementById('url')).value.trim();
+
+      if (!nombre) {
+        $error.textContent = 'Introduce un nombre.';
+        $error.style.display = 'block';
+        return;
+      }
+
+      if (!urlRegex.test(url)) {
+        $error.textContent = 'La URL no tiene un formato válido. Debe comenzar por http:// o https://';
+        $error.style.display = 'block';
+        return;
+      }
+
+      webs.push({ nombre, url });
+      renderTabla();
+
+      // Limpia el formulario
+      (document.getElementById('nombre')).value = '';
+      (document.getElementById('url')).value = '';
+    });
+
+    // --- Inicialización ---
+    renderTabla();
+    setIframeVisible(false); // Asegura que empieza oculto
+  </script>
 </body>
 </html>
+
