@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "titulo": "E-commerce con React",
+        "descripcion": "Desarrollo full-stack de una tienda virtual moderna. Incluye carrito de compras, pasarela de pago y dashboard administrativo.",
+        "tecnologias": ["React", "Node.js", "MongoDB", "CSS Grid", "Redux"],
+        "imagen": "https://picsum.photos/seed/ecommerce/800/600" 
+    },
+    {
+        "id": 2,
+        "titulo": "App de Tareas Pendientes (To-Do)",
+        "descripcion": "Aplicación simple para gestionar tareas diarias. Implementa almacenamiento local para persistencia de datos.",
+        "tecnologias": ["HTML5", "CSS3", "JavaScript", "Flexbox"],
+        "imagen": "https://picsum.photos/seed/todoapp/800/600"
+    },
+    {
+        "id": 3,
+        "titulo": "Blog de Viajes Responsivo",
+        "descripcion": "Maquetación de un blog optimizado para móviles y tabletas, demostrando habilidades avanzadas de diseño responsivo.",
+        "tecnologias": ["HTML5", "SASS", "Responsive Design", "Grid"],
+        "imagen": "https://picsum.photos/seed/blog/800/600"
+    },
+    {
+        "id": 4,
+        "titulo": "Panel de Control Financiero",
+        "descripcion": "Dashboard interactivo para visualizar datos financieros en tiempo real utilizando gráficos de biblioteca.",
+        "tecnologias": ["Vue.js", "Chart.js", "Tailwind CSS"],
+        "imagen": "https://picsum.photos/seed/dashboard/800/600"
+    }
+]
