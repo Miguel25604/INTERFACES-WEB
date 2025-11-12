@@ -21,3 +21,4 @@ if (isset($_GET["borrar"])) {
 <hr>
 <a href="cookie.php">Refrescar página</a> |
 <a href="cookie.php">Borrar cookie</a>
+<?php endif; ?>
