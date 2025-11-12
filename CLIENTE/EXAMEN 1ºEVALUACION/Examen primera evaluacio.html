@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inicio de sesión + Carta completa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+    }
+
+    #panel-sesion {
+      width: 300px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    #contenido {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fafafa;
+    }
+
+    #carta {
+      width: 80%;
+      height: 80%;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    #carta h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+      font-size: 1.1em;
+    }
+
+    .cantidad {
+      color: #007bff;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    button {
+      padding: 6px 10px;
+      cursor: pointer;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    form, #usuario-info {
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      background: white;
+    }
+
+    input {
+      display: block;
+      width: 90%;
+      margin-bottom: 10px;
+      padding: 6px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Panel lateral -->
+  <aside id="panel-sesion">
+    <h1>Sesión</h1>
+    <div id="sesion"></div>
+  </aside>
+
+  <!-- Contenido principal -->
+  <main id="contenido"></main>
+
+  <script>
+    // ======= Funciones para manejar cookies =======
+    function setCookie(nombre, valor, dias) {
+      const fecha = new Date();
+      fecha.setTime(fecha.getTime() + (dias * 24 * 60 * 60 * 1000));
+      const expiracion = "expires=" + fecha.toUTCString();
+      document.cookie = nombre + "=" + encodeURIComponent(valor) + ";" + expiracion + ";path=/";
+    }
+
+    function getCookie(nombre) {
+      const nombreEQ = nombre + "=";
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        let c = cookies[i].trim();
+        if (c.indexOf(nombreEQ) === 0) {
+          return decodeURIComponent(c.substring(nombreEQ.length));
+        }
+      }
+      return null;
+    }
+
+    function deleteCookie(nombre) {
+      document.cookie = nombre + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+
+    // ======= Render Sesión =======
+    function renderSesion() {
+      const contenedorSesion = document.getElementById("sesion");
+
+      // TODO: Asigna un valor a las variables usuario y email
+      let usuario;
+      let email;
+
+      if (usuario && email) {
+        contenedorSesion.innerHTML = `
+          <div id="usuario-info">
+            <p><strong>Usuario:</strong> ${usuario}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <button id="cerrarSesion">Cerrar sesión</button>
+          </div>
+        `;
+
+        // TODO: Añade un event listener al botón de cerrar sesión
+
+      } else {
+        contenedorSesion.innerHTML = `
+          <form id="formLogin">
+            <label>Nombre de usuario:</label>
+            <input type="text" id="usuario" required>
+            <label>Correo electrónico:</label>
+            <input type="email" id="email" required>
+            <button type="submit">Iniciar sesión</button>
+          </form>
+        `;
+
+        // TODO: Añade un event listener al formulario para gestionar el envío
+
+      }
+    }
+
+    // ======= Render Carta =======
+    function renderCarta() {
+      const contenedorCarta = document.getElementById("contenido");
+
+      // TODO: Asignales valor a ambas variables
+      let usuario;
+      let email;
+
+      if (usuario && email) {
+        const platos = [
+          "Pizza Margarita",
+          "Pasta Carbonara",
+          "Ensalada César",
+          "Paella Valenciana",
+          "Hamburguesa"
+        ];
+
+        let listaHTML = "";
+
+        // TODO: Recorre el array de platos y construye el HTML de cada elemento de la lista
+        // Cada elemento debe incluir: 
+        //   - un <span> con el nombre del plato
+        //   - un <span> con la clase "cantidad" e id="cant-nombrePlatoSinEspacios"
+        //   - un <button> con la clase "btnAdd" y el texto "Añadir"
+
+        contenedorCarta.innerHTML = `
+          <div id="carta">
+            <h2>Carta del día</h2>
+            <ul>${listaHTML}</ul>
+          </div>
+        `;
+
+        // TODO: Recorre todos los botones con la clase "btnAdd" y asignales un event listener
+        // El listener debe obtener el nombre del plato y llamar a la función abrirPopup(nombrePlato)
+
+      } else {
+        contenedorCarta.innerHTML = `<p style="color:#666;">Inicia sesión para ver la carta del día.</p>`;
+      }
+    }
+
+    // ======= Función para abrir el popup y pasarle datos =======
+    function abrirPopup(nombrePlato) {
+      const ancho = 800;
+      const alto = 600;
+
+      const left = (screen.width / 2) - (ancho / 2);
+      const top = (screen.height / 2) - (alto / 2);
+
+      // TODO: Declara una variable urlWiki y asignale la URL correspondiente en función del plato utilizando un switch
+      let urlWiki;
+
+      // TODO: Crea el popup asignandolo a esta variable
+      let popup;
+
+      // TODO: Asignar una función al evento onload del popup
+      popup.onload = () => {
+        // Llama al método mostrarPlato(nombrePlato, urlWiki)
+      };
+    }
+
+    // ======= Función llamada desde el popup =======
+    function actualizarCantidad(plato, cantidad) {
+      // TODO: Asignale un valor a id.
+      // Debe construirse concatenando el prefijo "cant-" con el nombre del plato sin espacios.
+      let id ="cant-" + plato.replace(/\s+/g, "");
+
+      const elemento = document.getElementById(id);
+
+      // TODO: Comprueba si el elemento existe antes de modificar su contenido.
+      // Si existe, debe actualizar su textContent con el formato: "(X uds)", donde X es la cantidad.
+    }
+
+    // ======= Iniciar sesión =======
+    function iniciarSesion(e) {
+      e.preventDefault();
+      const usuario = document.getElementById("usuario").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      if (usuario && email){
+        document.cookie = 'usuario=${encodeURIComponent(usuario)}; max-age=${7 * 24 * 60 * 60}; path=/';
+      
+      localStorage.setItem("email", email);
+      renderSesion();
+      renderCarta();
+
+        }
+        else {
+
+            alert("Por favor, completa ambos campos: usuario y email.");
+        }
+    }
+      // TODO: Comprobar si ambos campos (usuario y email) están completos.
+      // Si ambos tienen valor:
+      //   - Guardar el nombre de usuario en una cookie (por 7 días).
+      //   - Guardar el email en localStorage.
+      //   - Llamar a renderSesion() y renderCarta() para actualizar la interfaz.
+      // En caso contrario:
+      //   - Mostrar un alert indicando que se deben completar ambos campos.
+    
+
+    // ======= Cerrar sesión =======
+    function cerrarSesion() {
+        document.cookie ="usuario; max-age=0; path=/";
+        localStorage.removeItem("email");
+
+      renderSesion();
+      renderCarta();
+
+      // TODO: Elimina la cookie que almacena el nombre de usuario.
+      // TODO: Elimina del localStorage el valor del email guardado.
+
+    }
+
+    // ======= Inicialización =======
+    renderSesion();
+    renderCarta();
+  </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Plato seleccionado</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 10px;
+      background-color: #fafafa;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    p {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
+
+    iframe {
+      width: 95%;
+      height: 400px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h2>Plato seleccionado</h2>
+  <p id="nombrePlato">Esperando plato...</p>
+  <iframe id="wikiFrame" src=""></iframe>
+  <br>
+  <button id="btnCantidad">Añadir cantidad</button>
+  <button onclick="window.close()">Cerrar</button>
+
+  <script>
+    let nombreActual = "";
+
+    // ======= Función llamada desde la ventana principal =======
+    function mostrarPlato(nombre, url) {
+      nombreActual = nombre;
+
+      // TODO: Mostrar el nombre del plato en el elemento con id="nombrePlato"
+      // (Debe asignarse el texto recibido en el parámetro 'nombre')
+
+      // TODO: Mostrar la página de Wikipedia dentro del iframe con id="wikiFrame"
+      // (Debe asignarse la URL recibida en el parámetro 'url' al atributo 'src' del iframe)
+    }
+
+    // ======= Botón para añadir cantidad =======
+    document.getElementById("btnCantidad").addEventListener("click", () => {
+      pedirCantidad();
+    });
+
+    // ======= Función que gestiona el prompt, validación y confirmación =======
+    function pedirCantidad() {
+      // TODO: Asignale un valor a cantidad como prompt.
+      let cantidad;
+
+      if (cantidad === null) return; // Cancelado
+
+      cantidad = cantidad.trim();
+
+      // TODO: Validar que la cantidad sea un número entero positivo.
+      // Si no lo es, mostrar un alert indicando el error y volver a llamar a pedirCantidad().
+
+      // TODO: Asignale un valor a confirmar como confirm.
+      let confirmar;
+
+      // TODO: Comprobar si el usuario ha confirmado la acción.
+      // Si confirma:
+      //   - Llamar a window.opener.actualizarCantidad(nombreActual, cantidad);
+      //   - Mostrar un alert indicando cuántas unidades se han añadido.
+      //   - Cerrar la ventana del popup.
+      // En caso contrario:
+      //   - Volver a ejecutar pedirCantidad() para repetir el proceso.
+    }
+  </script>
+</body>
+</html>
