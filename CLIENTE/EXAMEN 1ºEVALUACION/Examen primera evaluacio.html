@@ -139,8 +139,8 @@
       const contenedorSesion = document.getElementById("sesion");
 
       // TODO: Asigna un valor a las variables usuario y email
-      let usuario;
-      let email;
+      let usuario = getCookie("usuario");
+      let email = localStorage.getItem("email");
 
       if (usuario && email) {
         contenedorSesion.innerHTML = `
@@ -151,6 +151,10 @@
           </div>
         `;
 
+        document
+            .getElementById("cerrarSesion")
+            .addEventListener("click", cerrarSesion);
+        
         // TODO: Añade un event listener al botón de cerrar sesión
 
       } else {
@@ -164,6 +168,9 @@
           </form>
         `;
 
+        document
+         .getElementById("formLogin")
+         .addEventListener("submit", iniciarSesion);
         // TODO: Añade un event listener al formulario para gestionar el envío
 
       }
@@ -174,8 +181,8 @@
       const contenedorCarta = document.getElementById("contenido");
 
       // TODO: Asignales valor a ambas variables
-      let usuario;
-      let email;
+      let usuario = getCookie("usuario");
+      let email = localStorage.getItem("email");
 
       if (usuario && email) {
         const platos = [
@@ -187,7 +194,16 @@
         ];
 
         let listaHTML = "";
-
+        for (let plato of platos) {
+          const platoSinEspacios = plato.replace(/\s+/g, "");
+          listaHTML += `
+            <li>
+              <span>${plato}</span>
+              <span class="cantidad" id="cant-${platoSinEspacios}"></span>
+              <button class="btnAdd">Añadir</button>
+            </li>
+          `;
+        }
         // TODO: Recorre el array de platos y construye el HTML de cada elemento de la lista
         // Cada elemento debe incluir: 
         //   - un <span> con el nombre del plato
@@ -201,6 +217,8 @@
           </div>
         `;
 
+
+
         // TODO: Recorre todos los botones con la clase "btnAdd" y asignales un event listener
         // El listener debe obtener el nombre del plato y llamar a la función abrirPopup(nombrePlato)
 
@@ -208,6 +226,7 @@
         contenedorCarta.innerHTML = `<p style="color:#666;">Inicia sesión para ver la carta del día.</p>`;
       }
     }
+
 
     // ======= Función para abrir el popup y pasarle datos =======
     function abrirPopup(nombrePlato) {
@@ -219,12 +238,38 @@
 
       // TODO: Declara una variable urlWiki y asignale la URL correspondiente en función del plato utilizando un switch
       let urlWiki;
+        switch (nombrePlato) {
+            case "Pizza Margarita":
+            urlWiki = "https://es.wikipedia.org/wiki/Pizza_Margarita";
+            break;
+            case "Pasta Carbonara":
+            urlWiki = "https://es.wikipedia.org/wiki/Carbonara";
+            break;
+            case "Ensalada César":
+            urlWiki = "https://es.wikipedia.org/wiki/Ensalada_C%C3%A9sar";
+            break;
+            case "Paella Valenciana":
+            urlWiki = "https://es.wikipedia.org/wiki/Paella";
+            break;
+            case "Hamburguesa":
+            urlWiki = "https://es.wikipedia.org/wiki/Hamburguesa";
+            break;
+            default:
+            urlWiki = "https://es.wikipedia.org/wiki/Cocina";
+        }
 
       // TODO: Crea el popup asignandolo a esta variable
       let popup;
+        popup = window.open(
+            "popupPlato.html",
+            "Popup Plato",
+            `width=${ancho},height=${alto},top=${top},left=${left}`
+        );
+
 
       // TODO: Asignar una función al evento onload del popup
       popup.onload = () => {
+        popup.mostrarPlato(nombrePlato, urlWiki);
         // Llama al método mostrarPlato(nombrePlato, urlWiki)
       };
     }
@@ -246,7 +291,7 @@
         } else {
             console.warn(`No se encontró el elemento con id: ${id}`);
         }
-        
+
     }
 
 
@@ -262,8 +307,8 @@
       localStorage.setItem("email", email);
       renderSesion();
       renderCarta();
-
-        }
+      }
+        
         else {
 
             alert("Por favor, completa ambos campos: usuario y email.");
