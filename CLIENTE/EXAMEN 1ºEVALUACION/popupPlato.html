@@ -57,23 +57,31 @@
     // ======= Función llamada desde la ventana principal =======
     function mostrarPlato(nombre, url) {
       nombreActual = nombre;
+    
 
       // TODO: Mostrar el nombre del plato en el elemento con id="nombrePlato"
       // (Debe asignarse el texto recibido en el parámetro 'nombre')
 
+        const nombrePlatoElem = document.getElementById("nombrePlato");
+        nombrePlatoElem.textContent = nombre;
+
       // TODO: Mostrar la página de Wikipedia dentro del iframe con id="wikiFrame"
       // (Debe asignarse la URL recibida en el parámetro 'url' al atributo 'src' del iframe)
+
+        const wikiFrameElem = document.getElementById("wikiFrame");
+        wikiFrameElem.src = url;
     }
 
     // ======= Botón para añadir cantidad =======
     document.getElementById("btnCantidad").addEventListener("click", () => {
       pedirCantidad();
+
     });
 
     // ======= Función que gestiona el prompt, validación y confirmación =======
     function pedirCantidad() {
       // TODO: Asignale un valor a cantidad como prompt.
-      let cantidad;
+      let cantidad = prompt("¿Cuántas unidades de " + nombreActual + " deseas añadir?");
 
       if (cantidad === null) return; // Cancelado
 
@@ -81,9 +89,18 @@
 
       // TODO: Validar que la cantidad sea un número entero positivo.
       // Si no lo es, mostrar un alert indicando el error y volver a llamar a pedirCantidad().
+      
+      if (!/^\d+$/.test(cantidad) || parseInt(cantidad) <= 0) {
+            alert("Por favor, introduce un número entero positivo.");
+            pedirCantidad();
+            return;
+        }
 
       // TODO: Asignale un valor a confirmar como confirm.
       let confirmar;
+        confirmar = confirm("¿Confirmas que deseas añadir " + cantidad + " unidades de " + nombreActual + "?");
+
+    
 
       // TODO: Comprobar si el usuario ha confirmado la acción.
       // Si confirma:
