@@ -239,7 +239,16 @@
 
       // TODO: Comprueba si el elemento existe antes de modificar su contenido.
       // Si existe, debe actualizar su textContent con el formato: "(X uds)", donde X es la cantidad.
+
+        if (elemento) {
+        elemento.textContent = `(${cantidad} uds)`;
+    
+        } else {
+            console.warn(`No se encontró el elemento con id: ${id}`);
+        }
+        
     }
+
 
     // ======= Iniciar sesión =======
     function iniciarSesion(e) {
