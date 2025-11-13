@@ -22,6 +22,16 @@ if (isset($_COOKIE["usuario"]) && isset($_COOKIE["password"])) {
     $usuario_cookie = $_COOKIE["usuario"];
     $password_cookie = $_COOKIE["password"];
 
+    foreach ($usuarios as $user) {
+        if ($user["usuario"] === $usuario_cookie && $user["password"] === $password_cookie) {
+            $_SESSION["usuario"] = $user["usuario"];
+            $_SESSION["rol"] = $user["rol"];
+            
+            header("Location: panel.php");
+            exit;
+        }
+    }
+
     // TODO: Recorre el array $usuarios y comprueba si existe un usuario cuyo
     //       nombre y contraseña coincidan con los valores almacenados en las cookies.
     //       Si existe, crea las variables de sesión 'usuario' y 'rol',
@@ -30,6 +40,16 @@ if (isset($_COOKIE["usuario"]) && isset($_COOKIE["password"])) {
 
 // --- Si se envía el formulario ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $username = $_POST["usuario"] ?? '';
+    $password = $_POST["password"]  ?? '';
+    $encontrado = false;
+
+    setcookie("usuario", $username, time() + 3600); 
+    setcookie("password", $password, time() + 3600); 
+
+    
+
     // TODO: Obten los valores enviados desde el formulario mediante $_POST.
     // TODO: Inicializa una variable de control ($encontrado = false).
     // TODO: Recorre el array $usuarios para comprobar si las credenciales coinciden.
