@@ -45,10 +45,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"]  ?? '';
     $encontrado = false;
 
-    setcookie("usuario", $username, time() + 3600); 
-    setcookie("password", $password, time() + 3600); 
-
+    foreach ($usuarios as $usuario) {
+        if ($usuario["usuario"] === $username && $usuario["password"] === $password) {
+            $encontrado = true;
+            
+            setcookie("usuario", $username, time() + 3600); 
+            setcookie("password", $password, time() + 3600); 
+            
+            $_SESSION["usuario"] = $usuario["usuario"];
+            $_SESSION["rol"] = $usuario["rol"];
+            header("Location: panel.php");
+            exit;
+        }
+    }
     
+
+
 
     // TODO: Obten los valores enviados desde el formulario mediante $_POST.
     // TODO: Inicializa una variable de control ($encontrado = false).

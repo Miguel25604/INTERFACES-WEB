@@ -55,7 +55,7 @@ if (isset($_COOKIE["permisos_personalizados"])) {
 
 // TODO: Recupera el valor enviado mediante la variable GET 'msg' (si existe)
 //       y almacenalo en la variable $mensaje. Si no existe, dejala vacía.
-$mensaje;
+$mensaje = isset($_GET["msg"]) ? $_GET["msg"] : '';
 ?>
 
 <!DOCTYPE html>
@@ -80,15 +80,19 @@ $mensaje;
         <?php endif; ?>
 
         <?php // TODO: Mostrar este enlace solo si el usuario tiene permiso para añadir usuarios ?>
+        <php if ($permisos[$rol]["añadir_usuario"]) : ?>
         <li><a href="añadir_usuario.php">Añadir usuario</a></li>
 
         <?php // TODO: Mostrar este enlace solo si el usuario tiene permiso para modificar permisos ?>
+        <php if ($permisos[$rol]["modificar_permisos"]) : ?>
         <li><a href="modificar_permisos.php">Modificar permisos</a></li>
 
         <?php // TODO: Mostrar este enlace solo si el usuario tiene permiso para añadir tareas ?>
+        <php if ($permisos[$rol]["añadir_tarea"]) : ?>
         <li><a href="añadir_tarea.php">Añadir tarea</a></li>
 
         <?php // TODO: Mostrar este enlace solo si el usuario tiene permiso para realizar tareas ?>
+        <php if ($permisos[$rol]["realizar_tarea"]) : ?>
         <li><a href="realizar_tarea.php">Realizar tarea</a></li>
     </ul>
 
