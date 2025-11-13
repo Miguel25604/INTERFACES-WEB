@@ -1,16 +1,17 @@
 <?php
 session_start();
 
-// Lista completa de permisos
-$todos_los_permisos = [
-    "saludo",
-    "añadir_usuario",
-    "modificar_permisos",
-    "añadir_tarea",
-    "realizar_tarea"
-];
+if (!isset($_SESSION["usuario"]) || !isset($_SESSION["rol"])) {
+    header("Location: login.php");
+    exit;
+}
 
-// Permisos base
+// TODO: Recupera las variables de sesión 'usuario' y 'rol' que se crearon en el login
+//       y almacenarlas en las variables $usuario y $rol correspondientes.
+$usuario;
+$rol;
+
+// --- Permisos base ---
 $permisos = [
     "admin" => [
         "saludo" => true,
@@ -42,75 +43,57 @@ $permisos = [
     ]
 ];
 
-// Cargar cookie previa
+// --- Aplicar permisos personalizados (si hay cookie) ---
 if (isset($_COOKIE["permisos_personalizados"])) {
-    $guardados = json_decode($_COOKIE["permisos_personalizados"], true);
-    if (is_array($guardados)) {
-        $permisos = array_replace_recursive($permisos, $guardados);
+    $permisos_guardados = json_decode($_COOKIE["permisos_personalizados"], true);
+    if (is_array($permisos_guardados)) {
+        $permisos = array_replace_recursive($permisos, $permisos_guardados);
     }
 }
 
-$cambio_realizado = false;
-
-// Procesar formulario
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    foreach ($permisos as $rol => $acciones) {
-        foreach ($todos_los_permisos as $permiso) {
-            $acciones[$permiso] = isset($_POST[$rol . "_" . $permiso]);
-        }
-        // Volvemos a guardar los cambios en el array original
-        $permisos[$rol] = $acciones;
-    }
-
-    setcookie("permisos_personalizados", json_encode($permisos), time() + 86400, "/");
-    $mensaje = "Permisos actualizados correctamente.";
-    $cambio_realizado = true;
-}
-
+// TODO: Recupera el valor enviado mediante la variable GET 'msg' (si existe)
+//       y almacenalo en la variable $mensaje. Si no existe, dejala vacía.
+$mensaje;
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Modificar Permisos</title>
+    <title>Aula Virtual - Panel</title>
 </head>
 <body>
-    <h2>Modificar Permisos por Rol</h2>
+    <h2>Panel del Aula Virtual</h2>
+    <p><strong>Usuario:</strong> <?php echo htmlspecialchars($usuario); ?></p>
 
-    <?php if (isset($mensaje)) echo "<p style='color:green;'>$mensaje</p>"; ?>
-
-    <form method="POST" action="">
-        <table border="1" cellpadding="6">
-            <tr>
-                <th>Rol</th>
-                <?php foreach ($todos_los_permisos as $permiso): ?>
-                    <th><?php echo htmlspecialchars($permiso); ?></th>
-                <?php endforeach; ?>
-            </tr>
-
-            <?php foreach ($permisos as $rol => $acciones): ?>
-                <tr>
-                    <td><strong><?php echo htmlspecialchars($rol); ?></strong></td>
-                    <?php foreach ($todos_los_permisos as $permiso): ?>
-                        <td style="text-align:center;">
-                            <input type="checkbox" name="<?php echo $rol . "_" . $permiso; ?>"
-                                   <?php echo !empty($acciones[$permiso]) ? "checked" : ""; ?>>
-                        </td>
-                    <?php endforeach; ?>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-
-        <br>
-        <input type="submit" value="Guardar cambios">
-    </form>
+    <?php if ($mensaje): ?>
+        <p style="color:green;"><?php echo htmlspecialchars($mensaje); ?></p>
+    <?php endif; ?>
 
     <hr>
-    <?php if ($cambio_realizado): ?>
-        <a href="panel.php?msg=Se han modificado los permisos disponibles para cada rol">Volver al panel</a>
-    <?php else: ?>
-        <a href="panel.php">Volver al panel</a>
-    <?php endif; ?>
+    <h3>Funciones disponibles:</h3>
+    <ul>
+        <?php if ($permisos[$rol]["saludo"]) : ?>
+            <li><a href="saluda.php">Saludar</a></li>
+        <?php endif; ?>
+
+        <?php // TODO: Mostrar este enlace solo si el usuario tiene permiso para añadir usuarios ?>
+        <li><a href="añadir_usuario.php">Añadir usuario</a></li>
+
+        <?php // TODO: Mostrar este enlace solo si el usuario tiene permiso para modificar permisos ?>
+        <li><a href="modificar_permisos.php">Modificar permisos</a></li>
+
+        <?php // TODO: Mostrar este enlace solo si el usuario tiene permiso para añadir tareas ?>
+        <li><a href="añadir_tarea.php">Añadir tarea</a></li>
+
+        <?php // TODO: Mostrar este enlace solo si el usuario tiene permiso para realizar tareas ?>
+        <li><a href="realizar_tarea.php">Realizar tarea</a></li>
+    </ul>
+
+    <hr>
+    <a href="cerrar_sesion.php">Cerrar sesión</a>
+    <form method="POST" action="borrar_cookies.php" style="margin-top: 10px;">
+        <input type="submit" value="Borrar todas las cookies y recargar">
+    </form>
 </body>
 </html>
