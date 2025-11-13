@@ -15,23 +15,25 @@ $cambio_realizado = false;
 // Procesar formulario de nuevo usuario
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["agregar"])) {
     // TODO: Obten los datos enviados por el formulario: usuario, contraseña y rol.
-    $nuevo_usuario = $POST ["usuario"];
-    $nueva_password = $POST ["password"];
-    $nuevo_rol = $POST ["rol"];
+    $nuevo_usuario = trim($_POST["usuario"] ?? '');
+    $nueva_password = trim($_POST["password"]?? '');
+    $nuevo_rol = trim($_POST["rol"]?? '');
 
     if ($nuevo_usuario && $nueva_password && $nuevo_rol) {
     // TODO: Crea un nuevo elemento (array asociativo) con las claves 'usuario', 'password' y 'rol' 
     //       y añadirlo al array $usuarios_nuevos. Con "usuarios_nuevos[] = " añadís nuevos elementos al final
-        $usuarios_nuevos[] = [
+        $usuarios_nuevos = [
             "usuario" => $nuevo_usuario,
             "password" => $nueva_password,
             "rol" => $nuevo_rol
             ];
 
+        $usuarios_nuevos[] = $usuarios_nuevos;
+
     // TODO: Guarda el array actualizado en una cookie llamada 'usuarios_nuevos'
     //       codificando su contenido en formato JSON mediante json_encode().
         setcookie("usuarios_nuevos", json_encode($usuarios_nuevos), time() + 3600);
-        
+
         $mensaje = "Usuario '$nuevo_usuario' añadido correctamente.";
         $cambio_realizado = true;
     } else {
@@ -80,8 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["agregar"])) {
         <ul>
             <?php foreach ($usuarios_nuevos as $u): ?>
                 <li>
-                    <strong><?php echo htmlspecialchars($u["usuario"]); ?></strong>
-                    (Rol: <?php echo htmlspecialchars($u["rol"]); ?>)
+                    <strong><?php echo htmlspecialchars($usuarios_nuevos['usuario']); ?></strong>
+                    (Rol: <?php echo htmlspecialchars($usuarios_nuevos['rol']); ?>)
                 </li>
             <?php endforeach; ?>
         </ul>

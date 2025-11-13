@@ -39,19 +39,19 @@ if (isset($_COOKIE["usuario"]) && isset($_COOKIE["password"])) {
 }
 
 // --- Si se envía el formulario ---
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["usuario"])) {
 
     $username = $_POST["usuario"] ?? '';
     $password = $_POST["password"]  ?? '';
-    $encontrado = false;
 
+    $encontrado = false;
     foreach ($usuarios as $usuario) {
-        if ($usuario["usuario"] === $username && $usuario["password"] === $password) {
+        if ($usuarios['usuario'] === $username && $usuario['password'] === $password) {
             $encontrado = true;
             
             setcookie("usuario", $username, time() + 3600); 
             setcookie("password", $password, time() + 3600); 
-            
+
             $_SESSION["usuario"] = $usuario["usuario"];
             $_SESSION["rol"] = $usuario["rol"];
             header("Location: panel.php");
@@ -59,9 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     
-
-
-
     // TODO: Obten los valores enviados desde el formulario mediante $_POST.
     // TODO: Inicializa una variable de control ($encontrado = false).
     // TODO: Recorre el array $usuarios para comprobar si las credenciales coinciden.

@@ -29,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["completar"])) {
         $tarea = $cola->dequeue();
         $array_actualizado = iterator_to_array($cola);
         setcookie("tareas_pendientes", json_encode($array_actualizado), time() + 3600);
+        
         // TODO: Extrae la primera tarea de la cola.
         // TODO: Actualiza la cookie 'tareas_pendientes' guardando la cola resultante
         //       en formato JSON utilizando json_encode(iterator_to_array($cola)) para guardar el valor.
