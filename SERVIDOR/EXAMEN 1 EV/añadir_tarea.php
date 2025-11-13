@@ -3,12 +3,14 @@ session_start();
 
 // Cargar cola desde cookie
 // TODO: Crea una cola de tareas usando SplQueue, pero sin asignarle valor todavía.
-$cola;
+$cola = new SplQueue();
 
 // Cargar cola desde cookie
 if (isset($_COOKIE["tareas_pendientes"])) {
     $tareas_guardadas = json_decode($_COOKIE["tareas_pendientes"], true);
-
+    foreach ($tareas_guardadas as $tarea) {
+        $cola->enqueue($tarea);
+    }
     // TODO: Las tareas se guardan en la cookie como un array.
     //       Hay que convertir este array en una cola (SplQueue) añadiendo cada tarea
 }
@@ -18,14 +20,22 @@ $cambio_realizado = false;
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["agregar"])) {
     // TODO: Obten los valores enviados desde el formulario (nombre y descripción)
     //       y elimina los espacios sobrantes.
-    $nombre;
-    $descripcion;
+    $nombre = trim ($_POST["nombre"]) ?? '';
+    $descripcion = trim($_POST["descripcion"]) ?? '';
 
     if ($nombre && $descripcion) {
         // TODO: Crea un array asociativo llamado $tarea con las claves 'nombre' y 'descripcion'.
         // TODO: Añadir la nueva tarea a la cola mediante enqueue().
         // TODO: Guardar la cola actualizada en la cookie 'tareas_pendientes'
         //       utilizando json_encode(iterator_to_array($cola)) para guardar el valor.
+
+        $tarea = [
+            "nombre" => $nombre,
+            "descripcion" => $descripcion
+        ];
+        
+        $cola->enqueue($tarea);
+        setcookie("tareas_pendientes", json_encode(iterator_to_array($cola)), time() + 3600);
 
         $mensaje = "Tarea añadida correctamente.";
         $cambio_realizado = true;

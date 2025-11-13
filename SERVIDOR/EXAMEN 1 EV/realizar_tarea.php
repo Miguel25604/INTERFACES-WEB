@@ -3,7 +3,7 @@ session_start();
 
 // Cargar cola
 // TODO: Crea una cola de tareas usando SplQueue, pero sin asignarle valor todavía.
-$cola;
+$cola  = new SplQueue();
 
 // Cargar cola desde cookie
 if (isset($_COOKIE["tareas_pendientes"])) {
