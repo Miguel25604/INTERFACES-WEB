@@ -6,10 +6,12 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["rol"])) {
     exit;
 }
 
+
+
 // TODO: Recupera las variables de sesión 'usuario' y 'rol' que se crearon en el login
 //       y almacenarlas en las variables $usuario y $rol correspondientes.
-$usuario;
-$rol;
+$usuario = $_SESSION["usuario"];
+$rol = $_SESSION["rol"];
 
 // --- Permisos base ---
 $permisos = [
