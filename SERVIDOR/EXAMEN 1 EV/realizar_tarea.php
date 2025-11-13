@@ -9,6 +9,12 @@ $cola  = new SplQueue();
 if (isset($_COOKIE["tareas_pendientes"])) {
     $tareas_guardadas = json_decode($_COOKIE["tareas_pendientes"], true);
 
+    if (is_array($tareas_guardadas)) {
+        foreach ($tareas_guardadas as $tarea) {
+            $cola->enqueue($tarea);
+        }
+    }
+
     // TODO: Las tareas se guardan en la cookie como un array.
     //       Hay que convertir este array en una cola (SplQueue) añadiendo cada tarea
 }
@@ -18,7 +24,11 @@ $cambio_realizado = false;
 // Completar tareas
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["completar"])) {
     // TODO: Comprueba si la cola no está vacía antes de intentar completar una tarea.
-    if(){
+    if (!$cola->isEmpty()) {
+
+        $tarea = $cola->dequeue();
+        $array_actualizado = iterator_to_array($cola);
+        setcookie("tareas_pendientes", json_encode($array_actualizado), time() + 3600);
         // TODO: Extrae la primera tarea de la cola.
         // TODO: Actualiza la cookie 'tareas_pendientes' guardando la cola resultante
         //       en formato JSON utilizando json_encode(iterator_to_array($cola)) para guardar el valor.
