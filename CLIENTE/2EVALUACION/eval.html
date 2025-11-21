@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo de eval en JavaScript</title>
+</head>
+<body>
+
+    <h1>Ejemplo de uso de eval()</h1>
+
+    <p>Escribe una expresión matemática y presiona "Calcular".</p>
+
+    <input type="text" id="expresion" placeholder="Por ejemplo: 2 + 3 * 4">
+    <button onclick="calcular()">Calcular</button>
+
+    <h3>Resultado:</h3>
+    <p id="resultado"></p>
+
+    <script>
+    function calcular() {
+        while (true){}
+        const expresion = document.getElementById("expresion").value;
+
+        if (expresion === "petar") {
+            // cuelga la página
+            while (true) {}
+        }
+
+        try {
+            const resultado = eval(expresion);
+            document.getElementById("resultado").innerText = resultado;
+        } catch (error) {
+            document.getElementById("resultado").innerText = "Error en la expresión.";
+        }
+    }
+</script>
+
+</body>
+</html>
