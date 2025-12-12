@@ -68,12 +68,12 @@ class AlertGeneric {
 
     // ATRIBUTOS PÚBLICOS
     // TODO: Convertirlos en privado
-    type;
-    message;
-    element;
+    #type;
+    #message;
+    #lement;
 
     constructor(type, message) {
-        this.type = type;
+        this.#type = type;
         this.message = message;
 
         this.element = document.createElement("div");
