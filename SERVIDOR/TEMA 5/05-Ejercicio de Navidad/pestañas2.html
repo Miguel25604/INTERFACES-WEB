@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Pestañas Simples sin Map</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+    }
+
+    /* Botones de pestañas */
+    .tabs {
+        margin-bottom: 20px;
+    }
+
+    .tab-buttons button {
+        padding: 10px;
+        margin-right: 5px;
+        cursor: pointer;
+        background: #ddd;
+        border: 1px solid #777;
+        border-radius: 5px;
+    }
+
+    .tab-buttons button:hover {
+        background: #ccc;
+    }
+
+    /* Secciones */
+    .tab-section {
+        display: none;
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        border: 1px solid #333;
+    }
+</style>
+</head>
+<body>
+
+<h1>Pestañas con JavaScript</h1>
+
+<div id="tabsContainer"></div>
+
+<section id="post" class="tab-section">
+    <h2>Post</h2>
+    <form id="formulario-post">
+        <input type="text" id="num">
+        <input type="text" id="letras">
+        <button type="submit">Enviar</button>
+        <p id="resultado"></p>
+    </form>
+</section>
+<section id="get" class="tab-section">
+    <h2>GET</h2>
+    <form id="formulario-get">
+        <input type="text" id="num-get">
+        <input type="text" id="letras-get">
+        <button type="submit">Enviar</button>
+        <p id="resultado-get"></p>
+    </form>
+</section>
+<section id="json" class="tab-section">
+    <h2>JSON</h2>
+    <form id="formulario-json">
+        <input type="text" id="num-json">
+        <input type="text" id="letras-json">
+        <button type="submit">Enviar</button>
+        <p id="resultado-json"></p>
+    </form>
+</section>
+<section id="json-json" class="tab-section">
+    <h2>JSON-JSON</h2>
+    <form id="formulario-json-json">
+        <input type="text" id="num-json-json">
+        <input type="text" id="letras-json-json">
+        <button type="submit">Enviar</button>
+        <p id="resultado-json-json"></p>
+    </form>
+</section>
+<section id="cookie" class="tab-section">
+    <h2>Cookie (Cliente-Servidor)</h2>
+
+    <button id="btn-cookie">
+        Enviar cookie al servidor
+    </button>
+
+    <p id="resultado-cookie"></p>
+</section>
+
+<section id="cookie-cookie" class="tab-section">
+    <h2>Cookie → Cookie (Servidor-Cliente)</h2>
+
+    <button id="btn-cookie-cookie">
+        Enviar cookie y recibir cookie
+    </button>
+
+    <p id="resultado-cookie-cookie"></p>
+</section>
+
+
+
+
+<script>
+
+    // POST
+    document.getElementById("formulario-post").addEventListener("submit", async (event) =>{
+        
+        const numero = document.getElementById("num").value
+        const texto = document.getElementById("letras").value
+        
+        event.preventDefault()
+        const respuesta = await fetch("procesar.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "accion=post_numero&numero=" + encodeURIComponent(numero) + "&texto=" + encodeURIComponent(texto)
+        })
+
+        
+        document.getElementById("resultado").innerText = await respuesta.text();
+        
+        
+
+    })
+
+    // GET
+    document.getElementById("formulario-get").addEventListener("submit", async (event) =>{
+        
+        const numero = document.getElementById("num-get").value
+        const texto = document.getElementById("letras-get").value
+        
+        event.preventDefault()
+
+        const respuesta = await fetch ("procesar.php?accion=get_numero&numero=" + encodeURIComponent(numero)+ "&texto="+ encodeURIComponent(texto))
+
+        
+        document.getElementById("resultado-get").innerText = await respuesta.text();
+        
+        
+
+    })
+
+    // JSON
+    document.getElementById("formulario-json").addEventListener("submit", async (event) =>{
+        
+        const numero = document.getElementById("num-json").value
+        const texto = document.getElementById("letras-json").value
+        
+        event.preventDefault()
+        const datos = { texto: texto, numero: parseInt(numero) };
+
+        const respuesta = await fetch("procesar.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                accion: "json_datos",
+                persona: datos
+            })
+        });
+        
+        document.getElementById("resultado-json").innerText = await respuesta.text();
+        
+        
+
+    })
+
+    // JSON-JSON
+    document.getElementById("formulario-json-json").addEventListener("submit", async (event) =>{
+        
+        const numero = document.getElementById("num-json-json").value
+        const texto = document.getElementById("letras-json-json").value
+        
+        event.preventDefault()
+        const datos = { texto: texto, numero: parseInt(numero) };
+
+        const respuesta = await fetch("procesar.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                accion: "json_datos_json",
+                persona: datos
+            })
+        });
+        
+        // Recibir JSON del servidor
+        const json = await respuesta.json();
+
+        // Mostrar solo lo que nos interesa
+        const saludo = json.saludo;
+        const mensaje = json.mensaje;
+
+        document.getElementById("resultado-json-json").innerText =
+            saludo + "\n" + mensaje;
+        
+        
+
+    })
+
+
+
+// Crear cookie
+function setCookie(nombre, valor, dias) {
+    const fecha = new Date();
+    fecha.setTime(fecha.getTime() + (dias * 24 * 60 * 60 * 1000));
+    const expiracion = "expires=" + fecha.toUTCString();
+    document.cookie =
+        nombre + "=" + encodeURIComponent(valor) + ";" +
+        expiracion + ";path=/";
+}
+
+// Leer cookie
+function getCookie(nombre) {
+    const nombreEQ = nombre + "=";
+    const cookies = document.cookie.split(';');
+
+    for (let i = 0; i < cookies.length; i++) {
+        let c = cookies[i].trim();
+        if (c.indexOf(nombreEQ) === 0) {
+            return decodeURIComponent(c.substring(nombreEQ.length));
+        }
+    }
+    return null;
+}
+
+
+   // PESTAÑA 5 COOKIE (Cliente-Servidor)
+document.getElementById("btn-cookie").addEventListener("click", async () => {
+
+    const nombre = prompt("Introduce tu nombre:");
+    if (!nombre) {
+        document.getElementById("resultado-cookie").innerText =
+            "No se introdujo NADA DE NADA.";
+        return;
+    }
+
+    // El CLIENTE crea la cookie
+    setCookie("usuario", nombre, 1);
+
+    // El SERVIDOR la lee
+    const respuesta = await fetch(
+        "procesar.php?accion=leer_cookie",
+        {
+            method: "GET",
+            credentials: "same-origin"
+        }
+    );
+
+    const texto = await respuesta.text();
+    document.getElementById("resultado-cookie").innerText = texto;
+});
+
+   //PESTAÑA 6 COOKIE-COOKIE (Servidor-Cliente)
+
+document.getElementById("btn-cookie-cookie").addEventListener("click", async () => {
+
+    const nombre = prompt("Introduce tu nombre:");
+    if (!nombre) {
+        document.getElementById("resultado-cookie-cookie").innerText =
+            "NO HAS PUESTO NADA.";
+        return;
+    }
+
+    // Cookie creada en el cliente
+    setCookie("usuario", nombre, 1);
+
+    // El servidor CREARÁ otra cookie
+    const respuesta = await fetch(
+        "procesar.php?accion=servidor_set_cookie",
+        {
+            method: "GET",
+            credentials: "same-origin"
+        }
+    );
+
+    // Leemos respuesta (solo informativa)
+    await respuesta.text();
+
+    // Ahora leemos la cookie creada por PHP
+    const mensaje = getCookie("mensaje_servidor");
+
+    if (mensaje) {
+        document.getElementById("resultado-cookie-cookie").innerText =
+            "Mensaje recibido desde cookie del servidor:\n" + mensaje;
+    } else {
+        document.getElementById("resultado-cookie-cookie").innerText =
+            "No se encontró la cookie 'mensaje_servidor'.";
+    }
+});
+
+
+
+
+class Tabs {
+    constructor(tabNames, sectionIds) {
+        this.tabNames = tabNames;
+        this.sectionIds = sectionIds;
+
+        this.container = document.createElement("div");
+        this.container.className = "tabs";
+
+        this.btnArea = document.createElement("div");
+        this.btnArea.className = "tab-buttons";
+
+        this.container.appendChild(this.btnArea);
+
+        this.createButtons();
+        this.showTab(0); // Mostrar primera pestaña
+    }
+
+    createButtons() {
+        this.tabNames.forEach((name, index) => {
+            const btn = document.createElement("button");
+            btn.textContent = name;
+            btn.onclick = () => this.showTab(index);
+            this.btnArea.appendChild(btn);
+        });
+    }
+
+    showTab(index) {
+        // Ocultar todas las secciones
+        document.querySelectorAll(".tab-section")
+                .forEach(sec => sec.style.display = "none");
+
+        // Mostrar la sección correspondiente
+        const sectionId = this.sectionIds[index];
+        document.getElementById(sectionId).style.display = "block";
+    }
+
+    render(container) {
+        container.appendChild(this.container);
+    }
+}
+
+const myTabs = new Tabs(
+    ["POST", "GET", "JSON", "JSON-JSON", "COOKIE", "COOKIE-COOKIE"], // Nombres visibles
+    ["post", "get", "json", "json-json", "cookie", "cookie-cookie"] // IDs de las secciones
+);
+
+myTabs.render(document.getElementById("tabsContainer"));
+
+</script>
+
+</body>
+</html>
