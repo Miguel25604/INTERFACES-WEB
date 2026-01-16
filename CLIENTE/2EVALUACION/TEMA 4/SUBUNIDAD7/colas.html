@@ -4,19 +4,33 @@
   <meta charset="UTF-8">
   <title>Cola con Clase y Bucle</title>
 </head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  input {
+    margin-right: 10px;
+  }
+</style>
 <body>
 
   <h2>Cola (Queue) usando clase, bucle y atributo privado</h2>
+  
+  
 
-  <input id="entrada" placeholder="Elemento" />
-  <button onclick="encolar()">Encolar</button>
-  <button onclick="desencolar()">Desencolar</button>
+    <input id="entrada" placeholder="Elemento" />
+    <button onclick="encolar()">Encolar</button>
+    <button onclick="desencolar()">Desencolar</button>
 
+  
   <p><strong>Cola:</strong> <span id="cola"></span></p>
   <p><strong>Salida:</strong> <span id="salida"></span></p>
 
   <script>
-  // ===== Clase Cola =====
+
+  // ===== Crea 5 colas en el cliente: Pedidos en espera, Parrilla , Horno y plancha , Emplatar
+
   class Cola {
     #items; // atributo privado
 
@@ -58,6 +72,14 @@
       return resultado;
     }
   }
+
+  // ===== 5 colas =====
+  const colaEspera = new Cola(); // Pedidos en espera
+  const colaHornoParrilla = new Cola(); // Parrilla
+  const colaHorno = new Cola(); // Horno 
+  const colaPlancha = new Cola(); // Plancha
+  const colaEmplatar = new Cola(); // Emplatar
+
 
   // ===== Uso =====
   const cola = new Cola();
