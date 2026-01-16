@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Singleton simple - JavaScript puro</title>
+</head>
+<body>
+
+<script>
+  // =========================================================
+  // 1) SIN PATRÓN
+  // =========================================================
+  console.log("=== 1) SIN PATRÓN ===");
+
+  class ConfiguracionSinPatron {
+    constructor() {
+      this.idioma = "es";
+      this.modoOscuro = false;
+    }
+  }
+
+  function moduloA_sinPatron() {
+    const configA = new ConfiguracionSinPatron();
+    configA.modoOscuro = true;
+    console.log("Módulo A (sin patrón) pone modoOscuro =", configA.modoOscuro);
+    return configA;
+  }
+
+  function moduloB_sinPatron() {
+    const configB = new ConfiguracionSinPatron();
+    console.log("Módulo B (sin patrón) lee modoOscuro =", configB.modoOscuro);
+    return configB;
+  }
+
+  const configA1 = moduloA_sinPatron();
+  const configB1 = moduloB_sinPatron();
+  console.log("¿Son la misma instancia?", configA1 === configB1);
+
+  // =========================================================
+  // 2) CON SINGLETON
+  // =========================================================
+  console.log("\n=== 2) CON SINGLETON ===");
+
+  class ConfiguracionSingleton {
+    static instancia = null;
+
+    constructor() {
+      if (ConfiguracionSingleton.instancia) {
+        return ConfiguracionSingleton.instancia;
+      }
+
+      this.idioma = "es";
+      this.modoOscuro = false;
+      ConfiguracionSingleton.instancia = this;
+    }
+
+    static getInstancia() {
+      if (!ConfiguracionSingleton.instancia) {
+        ConfiguracionSingleton.instancia = new ConfiguracionSingleton();
+      }
+      return ConfiguracionSingleton.instancia;
+    }
+  }
+
+  function moduloA_singleton() {
+    const configA = ConfiguracionSingleton.getInstancia();
+    configA.modoOscuro = true;
+    console.log("Módulo A (singleton) pone modoOscuro =", configA.modoOscuro);
+    return configA;
+  }
+
+  function moduloB_singleton() {
+    const configB = ConfiguracionSingleton.getInstancia();
+    console.log("Módulo B (singleton) lee modoOscuro =", configB.modoOscuro);
+    return configB;
+  }
+
+  const configA2 = moduloA_singleton();
+  const configB2 = moduloB_singleton();
+  console.log("¿Son la misma instancia?", configA2 === configB2);
+</script>
+
+</body>
+</html>
