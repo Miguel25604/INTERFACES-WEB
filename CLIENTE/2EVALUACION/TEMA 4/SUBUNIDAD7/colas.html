@@ -1,84 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Singleton simple - JavaScript puro</title>
+  <meta charset="UTF-8">
+  <title>Cola con Clase y Bucle</title>
 </head>
 <body>
 
-<script>
-  // =========================================================
-  // 1) SIN PATRÓN
-  // =========================================================
-  console.log("=== 1) SIN PATRÓN ===");
+  <h2>Cola (Queue) usando clase, bucle y atributo privado</h2>
 
-  class ConfiguracionSinPatron {
-    constructor() {
-      this.idioma = "es";
-      this.modoOscuro = false;
-    }
-  }
+  <input id="entrada" placeholder="Elemento" />
+  <button onclick="encolar()">Encolar</button>
+  <button onclick="desencolar()">Desencolar</button>
 
-  function moduloA_sinPatron() {
-    const configA = new ConfiguracionSinPatron();
-    configA.modoOscuro = true;
-    console.log("Módulo A (sin patrón) pone modoOscuro =", configA.modoOscuro);
-    return configA;
-  }
+  <p><strong>Cola:</strong> <span id="cola"></span></p>
+  <p><strong>Salida:</strong> <span id="salida"></span></p>
 
-  function moduloB_sinPatron() {
-    const configB = new ConfiguracionSinPatron();
-    console.log("Módulo B (sin patrón) lee modoOscuro =", configB.modoOscuro);
-    return configB;
-  }
-
-  const configA1 = moduloA_sinPatron();
-  const configB1 = moduloB_sinPatron();
-  console.log("¿Son la misma instancia?", configA1 === configB1);
-
-  // =========================================================
-  // 2) CON SINGLETON
-  // =========================================================
-  console.log("\n=== 2) CON SINGLETON ===");
-
-  class ConfiguracionSingleton {
-    static instancia = null;
+  <script>
+  // ===== Clase Cola =====
+  class Cola {
+    #items; // atributo privado
 
     constructor() {
-      if (ConfiguracionSingleton.instancia) {
-        return ConfiguracionSingleton.instancia;
-      }
-
-      this.idioma = "es";
-      this.modoOscuro = false;
-      ConfiguracionSingleton.instancia = this;
+      this.#items = [];
     }
 
-    static getInstancia() {
-      if (!ConfiguracionSingleton.instancia) {
-        ConfiguracionSingleton.instancia = new ConfiguracionSingleton();
+    enqueue(elemento) {
+      this.#items.push(elemento);
+    }
+
+    dequeue() {
+      if (this.isEmpty()) {
+        return "La cola está vacía";
       }
-      return ConfiguracionSingleton.instancia;
+      return this.#items.shift();
+    }
+
+    isEmpty() {
+      return this.#items.length === 0;
+    }
+
+    size() {
+      return this.#items.length;
+    }
+
+    mostrar() {
+      if (this.isEmpty()) {
+        return "(vacía)";
+      }
+
+      let resultado = "";
+      for (let i = 0; i < this.#items.length; i++) {
+        resultado += this.#items[i];
+        if (i < this.#items.length - 1) {
+          resultado += " → ";
+        }
+      }
+      return resultado;
     }
   }
 
-  function moduloA_singleton() {
-    const configA = ConfiguracionSingleton.getInstancia();
-    configA.modoOscuro = true;
-    console.log("Módulo A (singleton) pone modoOscuro =", configA.modoOscuro);
-    return configA;
+  // ===== Uso =====
+  const cola = new Cola();
+
+  function encolar() {
+    const valor = document.getElementById("entrada").value;
+    if (valor === "") return;
+
+    cola.enqueue(valor);
+    document.getElementById("entrada").value = "";
+    mostrarCola();
   }
 
-  function moduloB_singleton() {
-    const configB = ConfiguracionSingleton.getInstancia();
-    console.log("Módulo B (singleton) lee modoOscuro =", configB.modoOscuro);
-    return configB;
+  function desencolar() {
+    const resultado = cola.dequeue();
+    document.getElementById("salida").textContent = resultado;
+    mostrarCola();
   }
 
-  const configA2 = moduloA_singleton();
-  const configB2 = moduloB_singleton();
-  console.log("¿Son la misma instancia?", configA2 === configB2);
+  function mostrarCola() {
+    document.getElementById("cola").textContent =
+      cola.mostrar() + " (tamaño: " + cola.size() + ")";
+  }
 </script>
+
 
 </body>
 </html>
