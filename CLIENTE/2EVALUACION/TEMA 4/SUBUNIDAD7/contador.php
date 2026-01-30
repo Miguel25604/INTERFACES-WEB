@@ -59,5 +59,3 @@ echo json_encode([
   "ok" => false,
   "error" => "Acción inválida. Usa action=url o action=jump"
 ]);
-exit;
-?>
