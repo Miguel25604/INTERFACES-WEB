@@ -2,39 +2,73 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Navegador con Pila y Cola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simulación Navegador - Pila y Cola</title>
+  <style>
+    body{font-family:Arial, Helvetica, sans-serif; margin:20px; color:#222}
+    .row{display:flex; gap:16px; flex-wrap:wrap}
+    .card{border:1px solid #ddd; border-radius:10px; padding:14px; min-width:280px; flex:1}
+    button{padding:10px 12px; border:1px solid #bbb; background:#f7f7f7; border-radius:8px; cursor:pointer}
+    button:disabled{opacity:.5; cursor:not-allowed}
+    select{padding:10px; border-radius:8px; border:1px solid #bbb; min-width:260px}
+    .muted{color:#666; font-size:14px}
+    ul{margin:8px 0 0 18px}
+    .pill{display:inline-block; padding:4px 10px; border:1px solid #ddd; border-radius:999px; background:#fafafa}
+  </style>
 </head>
 <body>
 
-<h1>Simulación de navegador</h1>
+  <h1>Simulación navegador (Pila + Cola + Cookie saltos)</h1>
+  <p class="muted">
+    - Selección manual ⇒ limpia el historial hacia delante.<br>
+    - Atrás: <b>Pila</b> (LIFO). Adelante: <b>Cola</b> (FIFO).<br>
+    - Cada navegación incrementa el contador de saltos en cookie del servidor.
+  </p>
 
-<select id="webs">
-  <option value="google">Google</option>
-  <option value="wikipedia">Wikipedia</option>
-  <option value="github">GitHub</option>
-</select>
+  <div class="card">
+    <div class="row" style="align-items:flex-end">
+      <div>
+        <label for="webs"><b>Lista de webs:</b></label><br>
+        <select id="webs">
+          <option value="google">Google</option>
+          <option value="wikipedia">Wikipedia</option>
+          <option value="github">GitHub</option>
+          <option value="openai">OpenAI</option>
+          <option value="elpais">El País</option>
+        </select>
+      </div>
 
-<br><br>
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <button id="abrir">Abrir (selección)</button>
+        <button id="atras">⬅ Atrás</button>
+        <button id="adelante">Adelante ➡</button>
+      </div>
+    </div>
 
-<button id="abrir">Abrir web</button>
-<button id="atras">⬅ Atrás</button>
-<button id="adelante">➡ Adelante</button>
+    <hr style="border:none;border-top:1px solid #eee; margin:14px 0">
 
-<h3>Web actual:</h3>
-<pre id="actual">Ninguna</pre>
+    <div>
+      <div><b>Web actual:</b> <span id="actual" class="pill">—</span></div>
+      <div style="margin-top:8px"><b>Saltos:</b> <span id="saltos" class="pill">0</span></div>
+      <div id="msg" class="muted" style="margin-top:10px"></div>
+    </div>
+  </div>
 
-<h3>Saltos (cookie servidor):</h3>
-<pre id="saltos">0</pre>
+  <div class="row" style="margin-top:16px">
+    <div class="card">
+      <b>Historial atrás (PILA)</b>
+      <ul id="histAtras"></ul>
+    </div>
 
-<h3>Historial atrás (PILA)</h3>
-<pre id="historialAtras"></pre>
-
-<h3>Historial adelante (COLA)</h3>
-<pre id="historialAdelante"></pre>
+    <div class="card">
+      <b>Historial adelante (COLA)</b>
+      <ul id="histAdelante"></ul>
+    </div>
+  </div>
 
 <script>
 /* =======================
-   CLASE PILA (TU EJEMPLO)
+   PILA (BASADA EN TU EJEMPLO)
    ======================= */
 class Pila {
   #elementos;
@@ -56,18 +90,14 @@ class Pila {
     return this.#elementos.length === 0;
   }
 
-  mostrar() {
-    if (this.isEmpty()) return "Pila vacía";
-    let txt = "";
-    for (let i = this.#elementos.length - 1; i >= 0; i--) {
-      txt += this.#elementos[i] + "\n";
-    }
-    return txt;
+  toArrayTopFirst() {
+    // para mostrar: cima -> base
+    return [...this.#elementos].reverse();
   }
 }
 
 /* =======================
-   CLASE COLA (FIFO)
+   COLA (FIFO)
    ======================= */
 class Cola {
   #elementos;
@@ -89,14 +119,17 @@ class Cola {
     return this.#elementos.length === 0;
   }
 
-  mostrar() {
-    if (this.isEmpty()) return "Cola vacía";
-    return this.#elementos.join("\n");
+  toArray() {
+    return [...this.#elementos];
+  }
+
+  clear() {
+    this.#elementos = [];
   }
 }
 
 /* =======================
-   LÓGICA NAVEGADOR
+   ESTADO NAVEGADOR
    ======================= */
 const pilaAtras = new Pila();
 const colaAdelante = new Cola();
@@ -104,56 +137,139 @@ const colaAdelante = new Cola();
 let webActual = null;
 
 const sel = document.getElementById("webs");
-const actual = document.getElementById("actual");
-const saltos = document.getElementById("saltos");
-const hAtras = document.getElementById("historialAtras");
-const hAdelante = document.getElementById("historialAdelante");
+const actualEl = document.getElementById("actual");
+const saltosEl = document.getElementById("saltos");
+const msgEl = document.getElementById("msg");
 
-async function abrirWeb(id, modo) {
+const ulAtras = document.getElementById("histAtras");
+const ulAdelante = document.getElementById("histAdelante");
 
-  // si es selección manual → limpiar adelante
-  if (modo === "manual") {
-    colaAdelante = new Cola();
+const btnAbrir = document.getElementById("abrir");
+const btnAtras = document.getElementById("atras");
+const btnAdelante = document.getElementById("adelante");
+
+function render() {
+  actualEl.textContent = webActual ?? "—";
+
+  // pintar pila
+  ulAtras.innerHTML = "";
+  const backItems = pilaAtras.toArrayTopFirst();
+  if (backItems.length === 0) {
+    const li = document.createElement("li");
+    li.textContent = "(vacío)";
+    ulAtras.appendChild(li);
+  } else {
+    backItems.forEach(x => {
+      const li = document.createElement("li");
+      li.textContent = x;
+      ulAtras.appendChild(li);
+    });
   }
 
-  // pedir URL al servidor
-  const res = await fetch(`get_url.php?site=${id}`);
-  const data = await res.json();
+  // pintar cola
+  ulAdelante.innerHTML = "";
+  const fwdItems = colaAdelante.toArray();
+  if (fwdItems.length === 0) {
+    const li = document.createElement("li");
+    li.textContent = "(vacío)";
+    ulAdelante.appendChild(li);
+  } else {
+    fwdItems.forEach(x => {
+      const li = document.createElement("li");
+      li.textContent = x;
+      ulAdelante.appendChild(li);
+    });
+  }
 
-  window.open(data.url, "_blank");
-
-  // incrementar saltos
-  const s = await fetch("jump.php", { method: "POST" });
-  const js = await s.json();
-  saltos.textContent = js.jumps;
-
-  webActual = id;
-  actual.textContent = id;
-
-  hAtras.textContent = pilaAtras.mostrar();
-  hAdelante.textContent = colaAdelante.mostrar();
+  btnAtras.disabled = pilaAtras.isEmpty();
+  btnAdelante.disabled = colaAdelante.isEmpty();
 }
 
-document.getElementById("abrir").onclick = async () => {
+async function pedirUrl(siteId){
+  const res = await fetch(`contador.php?action=url&site=${encodeURIComponent(siteId)}`, {
+    credentials: "include"
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error || "Error URL");
+  return data.url;
+}
+
+async function incrementarSaltos(){
+  const res = await fetch(`contador.php?action=jump`, {
+    method: "POST",
+    credentials: "include"
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error || "Error saltos");
+  return data.jumps;
+}
+
+async function navegar(siteId, modo){
+  // modo: manual | atras | adelante
+  try{
+    msgEl.textContent = "";
+
+    // Si es manual: limpiar cola adelante
+    if (modo === "manual") {
+      colaAdelante.clear();
+    }
+
+    // 1) pedir URL al servidor
+    const url = await pedirUrl(siteId);
+
+    // 2) abrir popup
+    window.open(url, "_blank", "noopener,noreferrer,width=1100,height=720");
+
+    // 3) incrementar cookie
+    const jumps = await incrementarSaltos();
+    saltosEl.textContent = String(jumps);
+
+    webActual = siteId;
+    render();
+  } catch(e) {
+    msgEl.textContent = "❌ " + e.message;
+  }
+}
+
+// Abrir selección manual
+btnAbrir.addEventListener("click", async () => {
+  const chosen = sel.value;
+
+  // La actual pasa a pila (atrás)
   if (webActual !== null) pilaAtras.push(webActual);
-  await abrirWeb(sel.value, "manual");
-};
 
-document.getElementById("atras").onclick = async () => {
-  if (pilaAtras.isEmpty()) return;
+  await navegar(chosen, "manual");
+});
 
+// Atrás (pila)
+btnAtras.addEventListener("click", async () => {
+  if (webActual === null) return;
+
+  // Actual -> cola adelante
   colaAdelante.enqueue(webActual);
-  const anterior = pilaAtras.pop();
-  await abrirWeb(anterior, "atras");
-};
 
-document.getElementById("adelante").onclick = async () => {
-  if (colaAdelante.isEmpty()) return;
+  // Sacar de pila
+  const prev = pilaAtras.pop();
+  if (prev === null) return;
 
+  await navegar(prev, "atras");
+});
+
+// Adelante (cola)
+btnAdelante.addEventListener("click", async () => {
+  if (webActual === null) return;
+
+  // Actual -> pila atrás
   pilaAtras.push(webActual);
-  const siguiente = colaAdelante.dequeue();
-  await abrirWeb(siguiente, "adelante");
-};
+
+  // Sacar primero de cola
+  const next = colaAdelante.dequeue();
+  if (next === null) return;
+
+  await navegar(next, "adelante");
+});
+
+render();
 </script>
 
 </body>
