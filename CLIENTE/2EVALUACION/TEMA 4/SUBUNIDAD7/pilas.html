@@ -1,124 +1,161 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Simulador de Navegador</title>
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        button { margin: 5px; }
-        ul { margin-top: 10px; }
-    </style>
+  <meta charset="utf-8" />
+  <title>Navegador con Pila y Cola</title>
 </head>
 <body>
 
-<h2>🌐 Navegador Simulado</h2>
+<h1>Simulación de navegador</h1>
 
 <select id="webs">
-    <option value="">-- Selecciona una web --</option>
-    <option value="https://google.com">Google</option>
-    <option value="https://wikipedia.org">Wikipedia</option>
-    <option value="https://github.com">GitHub</option>
+  <option value="google">Google</option>
+  <option value="wikipedia">Wikipedia</option>
+  <option value="github">GitHub</option>
 </select>
 
-<button onclick="retroceder()">⬅ Retroceder</button>
-<button onclick="avanzar()">➡ Avanzar</button>
+<br><br>
 
-<p><strong>Saltos dados:</strong> <span id="saltos">0</span></p>
+<button id="abrir">Abrir web</button>
+<button id="atras">⬅ Atrás</button>
+<button id="adelante">➡ Adelante</button>
 
-<h3>📚 Historial completo (pila)</h3>
-<ul id="historial"></ul>
+<h3>Web actual:</h3>
+<pre id="actual">Ninguna</pre>
+
+<h3>Saltos (cookie servidor):</h3>
+<pre id="saltos">0</pre>
+
+<h3>Historial atrás (PILA)</h3>
+<pre id="historialAtras"></pre>
+
+<h3>Historial adelante (COLA)</h3>
+<pre id="historialAdelante"></pre>
 
 <script>
 /* =======================
-   SERVIDOR (simulado)
-======================= */
-const servidor = {
-    obtenerURL(web) {
-        return web; // devuelve la URL solicitada
-    },
-    incrementarSaltos() {
-        let saltos = Number(getCookie("saltos")) || 0;
-        saltos++;
-        document.cookie = `saltos=${saltos}`;
-        return saltos;
+   CLASE PILA (TU EJEMPLO)
+   ======================= */
+class Pila {
+  #elementos;
+
+  constructor() {
+    this.#elementos = [];
+  }
+
+  push(elemento) {
+    this.#elementos.push(elemento);
+  }
+
+  pop() {
+    if (this.isEmpty()) return null;
+    return this.#elementos.pop();
+  }
+
+  isEmpty() {
+    return this.#elementos.length === 0;
+  }
+
+  mostrar() {
+    if (this.isEmpty()) return "Pila vacía";
+    let txt = "";
+    for (let i = this.#elementos.length - 1; i >= 0; i--) {
+      txt += this.#elementos[i] + "\n";
     }
+    return txt;
+  }
+}
+
+/* =======================
+   CLASE COLA (FIFO)
+   ======================= */
+class Cola {
+  #elementos;
+
+  constructor() {
+    this.#elementos = [];
+  }
+
+  enqueue(elemento) {
+    this.#elementos.push(elemento);
+  }
+
+  dequeue() {
+    if (this.isEmpty()) return null;
+    return this.#elementos.shift();
+  }
+
+  isEmpty() {
+    return this.#elementos.length === 0;
+  }
+
+  mostrar() {
+    if (this.isEmpty()) return "Cola vacía";
+    return this.#elementos.join("\n");
+  }
+}
+
+/* =======================
+   LÓGICA NAVEGADOR
+   ======================= */
+const pilaAtras = new Pila();
+const colaAdelante = new Cola();
+
+let webActual = null;
+
+const sel = document.getElementById("webs");
+const actual = document.getElementById("actual");
+const saltos = document.getElementById("saltos");
+const hAtras = document.getElementById("historialAtras");
+const hAdelante = document.getElementById("historialAdelante");
+
+async function abrirWeb(id, modo) {
+
+  // si es selección manual → limpiar adelante
+  if (modo === "manual") {
+    colaAdelante = new Cola();
+  }
+
+  // pedir URL al servidor
+  const res = await fetch(`get_url.php?site=${id}`);
+  const data = await res.json();
+
+  window.open(data.url, "_blank");
+
+  // incrementar saltos
+  const s = await fetch("jump.php", { method: "POST" });
+  const js = await s.json();
+  saltos.textContent = js.jumps;
+
+  webActual = id;
+  actual.textContent = id;
+
+  hAtras.textContent = pilaAtras.mostrar();
+  hAdelante.textContent = colaAdelante.mostrar();
+}
+
+document.getElementById("abrir").onclick = async () => {
+  if (webActual !== null) pilaAtras.push(webActual);
+  await abrirWeb(sel.value, "manual");
 };
 
-/* =======================
-   CLIENTE
-======================= */
-let pilaHistorial = [];
-let colaAdelante = [];
-let popup = null;
+document.getElementById("atras").onclick = async () => {
+  if (pilaAtras.isEmpty()) return;
 
-document.getElementById("webs").addEventListener("change", e => {
-    if (e.target.value) {
-        abrirWeb(e.target.value, true);
-        colaAdelante = []; // limpiar historial adelante
-    }
-});
+  colaAdelante.enqueue(webActual);
+  const anterior = pilaAtras.pop();
+  await abrirWeb(anterior, "atras");
+};
 
-function abrirWeb(web, guardarHistorial) {
-    const url = servidor.obtenerURL(web);
+document.getElementById("adelante").onclick = async () => {
+  if (colaAdelante.isEmpty()) return;
 
-    if (guardarHistorial && pilaHistorial.length > 0) {
-        // no duplicar si es la misma
-        if (pilaHistorial[pilaHistorial.length - 1] !== web) {
-            pilaHistorial.push(web);
-        }
-    } else if (pilaHistorial.length === 0) {
-        pilaHistorial.push(web);
-    }
-
-    if (popup && !popup.closed) popup.close();
-    popup = window.open(url, "_blank", "width=600,height=400");
-
-    const saltos = servidor.incrementarSaltos();
-    document.getElementById("saltos").textContent = saltos;
-
-    actualizarHistorial();
-}
-
-function retroceder() {
-    if (pilaHistorial.length <= 1) return;
-
-    const actual = pilaHistorial.pop();
-    colaAdelante.unshift(actual);
-
-    abrirWeb(pilaHistorial[pilaHistorial.length - 1], false);
-}
-
-function avanzar() {
-    if (colaAdelante.length === 0) return;
-
-    const siguiente = colaAdelante.shift();
-    pilaHistorial.push(siguiente);
-
-    abrirWeb(siguiente, false);
-}
-
-function actualizarHistorial() {
-    const ul = document.getElementById("historial");
-    ul.innerHTML = "";
-    pilaHistorial.forEach(web => {
-        const li = document.createElement("li");
-        li.textContent = web;
-        ul.appendChild(li);
-    });
-}
-
-/* =======================
-   COOKIES
-======================= */
-function getCookie(nombre) {
-    const cookies = document.cookie.split("; ");
-    for (let c of cookies) {
-        const [key, value] = c.split("=");
-        if (key === nombre) return value;
-    }
-    return null;
-}
+  pilaAtras.push(webActual);
+  const siguiente = colaAdelante.dequeue();
+  await abrirWeb(siguiente, "adelante");
+};
 </script>
 
 </body>
 </html>
+
