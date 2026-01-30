@@ -18,12 +18,7 @@
 </head>
 <body>
 
-  <h1>Simulación navegador (Pila + Cola + Cookie saltos)</h1>
-  <p class="muted">
-    - Selección manual ⇒ limpia el historial hacia delante.<br>
-    - Atrás: <b>Pila</b> (LIFO). Adelante: <b>Cola</b> (FIFO).<br>
-    - Cada navegación incrementa el contador de saltos en cookie del servidor.
-  </p>
+  <h1>Simulación navegador</h1>
 
   <div class="card">
     <div class="row" style="align-items:flex-end">
@@ -42,6 +37,7 @@
         <button id="abrir">Abrir (selección)</button>
         <button id="atras">⬅ Atrás</button>
         <button id="adelante">Adelante ➡</button>
+        <button id="limpiar">🧹 Limpiar historial</button>
       </div>
     </div>
 
@@ -61,71 +57,39 @@
     </div>
 
     <div class="card">
-      <b>Historial adelante (COLA)</b>
+      <b>Historial adelante (PILA)</b>
       <ul id="histAdelante"></ul>
     </div>
   </div>
 
 <script>
 /* =======================
-   PILA (BASADA EN TU EJEMPLO)
+   PILA
    ======================= */
 class Pila {
   #elementos;
-
-  constructor() {
-    this.#elementos = [];
-  }
-
-  push(elemento) {
-    this.#elementos.push(elemento);
-  }
-
-  pop() {
-    if (this.isEmpty()) return null;
-    return this.#elementos.pop();
-  }
-
-  isEmpty() {
-    return this.#elementos.length === 0;
-  }
-
-  toArrayTopFirst() {
-    // para mostrar: cima -> base
-    return [...this.#elementos].reverse();
-  }
+  constructor() { this.#elementos = []; }
+  push(elemento) { this.#elementos.push(elemento); }
+  pop() { return this.isEmpty() ? null : this.#elementos.pop(); }
+  isEmpty() { return this.#elementos.length === 0; }
+  toArrayTopFirst() { return [...this.#elementos].reverse(); } // cima->base (para pintar)
+  toArrayBaseFirst() { return [...this.#elementos]; }          // base->cima (para guardar)
+  loadFromBaseFirst(arr) { this.#elementos = Array.isArray(arr) ? [...arr] : []; }
+  clear() { this.#elementos = []; }
 }
 
 /* =======================
-   COLA (FIFO)
+   COLA
    ======================= */
 class Cola {
   #elementos;
-
-  constructor() {
-    this.#elementos = [];
-  }
-
-  enqueue(elemento) {
-    this.#elementos.push(elemento);
-  }
-
-  dequeue() {
-    if (this.isEmpty()) return null;
-    return this.#elementos.shift();
-  }
-
-  isEmpty() {
-    return this.#elementos.length === 0;
-  }
-
-  toArray() {
-    return [...this.#elementos];
-  }
-
-  clear() {
-    this.#elementos = [];
-  }
+  constructor() { this.#elementos = []; }
+  enqueue(elemento) { this.#elementos.push(elemento); }
+  dequeue() { return this.isEmpty() ? null : this.#elementos.shift(); }
+  isEmpty() { return this.#elementos.length === 0; }
+  toArray() { return [...this.#elementos]; }
+  loadFromArray(arr) { this.#elementos = Array.isArray(arr) ? [...arr] : []; }
+  clear() { this.#elementos = []; }
 }
 
 /* =======================
@@ -133,25 +97,27 @@ class Cola {
    ======================= */
 const pilaAtras = new Pila();
 const colaAdelante = new Cola();
-
 let webActual = null;
 
 const sel = document.getElementById("webs");
 const actualEl = document.getElementById("actual");
 const saltosEl = document.getElementById("saltos");
 const msgEl = document.getElementById("msg");
-
 const ulAtras = document.getElementById("histAtras");
 const ulAdelante = document.getElementById("histAdelante");
 
 const btnAbrir = document.getElementById("abrir");
 const btnAtras = document.getElementById("atras");
 const btnAdelante = document.getElementById("adelante");
+const btnLimpiar = document.getElementById("limpiar");
 
+/* =======================
+   PINTAR UI
+   ======================= */
 function render() {
   actualEl.textContent = webActual ?? "—";
 
-  // pintar pila
+  // PILA atrás
   ulAtras.innerHTML = "";
   const backItems = pilaAtras.toArrayTopFirst();
   if (backItems.length === 0) {
@@ -166,7 +132,7 @@ function render() {
     });
   }
 
-  // pintar cola
+  // COLA adelante
   ulAdelante.innerHTML = "";
   const fwdItems = colaAdelante.toArray();
   if (fwdItems.length === 0) {
@@ -185,6 +151,9 @@ function render() {
   btnAdelante.disabled = colaAdelante.isEmpty();
 }
 
+/* =======================
+   API
+   ======================= */
 async function pedirUrl(siteId){
   const res = await fetch(`contador.php?action=url&site=${encodeURIComponent(siteId)}`, {
     credentials: "include"
@@ -204,6 +173,66 @@ async function incrementarSaltos(){
   return data.jumps;
 }
 
+/* =======================
+   GUARDAR / CARGAR ESTADO EN SERVIDOR (COOKIE)
+   ======================= */
+
+// guardado con pequeño "debounce" para no spamear el servidor
+let saveTimer = null;
+function programarGuardadoEstado(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(guardarEstadoServidor, 150);
+}
+
+async function guardarEstadoServidor(){
+  const payload = {
+    actual: webActual,
+    atras: pilaAtras.toArrayBaseFirst(),  // base->cima
+    adelante: colaAdelante.toArray()      // frente->final
+  };
+
+  const res = await fetch(`contador.php?action=state_set`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    credentials: "include"
+  });
+
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error || "Error guardando estado");
+}
+
+async function cargarEstadoServidor(){
+  const res = await fetch(`contador.php?action=state_get`, {
+    credentials: "include"
+  });
+
+  const data = await res.json();
+  if (!data.ok) return; // si no hay nada guardado, no pasa nada
+
+  // Cargar saltos
+  saltosEl.textContent = String(data.jumps ?? 0);
+
+  // Cargar historiales + actual
+  webActual = data.state?.actual ?? null;
+  pilaAtras.loadFromBaseFirst(data.state?.atras ?? []);
+  colaAdelante.loadFromArray(data.state?.adelante ?? []);
+
+  render();
+}
+
+async function limpiarEstadoServidor(){
+  const res = await fetch(`contador.php?action=state_clear`, {
+    method: "POST",
+    credentials: "include"
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error || "Error limpiando servidor");
+}
+
+/* =======================
+   NAVEGACIÓN
+   ======================= */
 async function navegar(siteId, modo){
   // modo: manual | atras | adelante
   try{
@@ -220,12 +249,16 @@ async function navegar(siteId, modo){
     // 2) abrir popup
     window.open(url, "_blank", "noopener,noreferrer,width=1100,height=720");
 
-    // 3) incrementar cookie
+    // 3) incrementar cookie saltos
     const jumps = await incrementarSaltos();
     saltosEl.textContent = String(jumps);
 
     webActual = siteId;
     render();
+
+    // 4) guardar estado (historiales) en servidor
+    programarGuardadoEstado();
+
   } catch(e) {
     msgEl.textContent = "❌ " + e.message;
   }
@@ -234,10 +267,7 @@ async function navegar(siteId, modo){
 // Abrir selección manual
 btnAbrir.addEventListener("click", async () => {
   const chosen = sel.value;
-
-  // La actual pasa a pila (atrás)
   if (webActual !== null) pilaAtras.push(webActual);
-
   await navegar(chosen, "manual");
 });
 
@@ -245,10 +275,7 @@ btnAbrir.addEventListener("click", async () => {
 btnAtras.addEventListener("click", async () => {
   if (webActual === null) return;
 
-  // Actual -> cola adelante
   colaAdelante.enqueue(webActual);
-
-  // Sacar de pila
   const prev = pilaAtras.pop();
   if (prev === null) return;
 
@@ -259,19 +286,40 @@ btnAtras.addEventListener("click", async () => {
 btnAdelante.addEventListener("click", async () => {
   if (webActual === null) return;
 
-  // Actual -> pila atrás
   pilaAtras.push(webActual);
-
-  // Sacar primero de cola
   const next = colaAdelante.dequeue();
   if (next === null) return;
 
   await navegar(next, "adelante");
 });
 
+// Limpiar historial (cliente + servidor)
+btnLimpiar.addEventListener("click", async () => {
+  try{
+    msgEl.textContent = "";
+
+    // Cliente
+    webActual = null;
+    pilaAtras.clear();
+    colaAdelante.clear();
+    saltosEl.textContent = "0";
+    render();
+
+    // Servidor (cookies)
+    await limpiarEstadoServidor();
+
+    msgEl.textContent = "✅ Historial limpiado (cliente + servidor).";
+  } catch(e){
+    msgEl.textContent = "❌ " + e.message;
+  }
+});
+
+/* =======================
+   ARRANQUE: recuperar sesión previa
+   ======================= */
 render();
+cargarEstadoServidor();
 </script>
 
 </body>
 </html>
-
